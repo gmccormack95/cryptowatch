@@ -69,6 +69,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-layout-android:1.5.4")
     implementation("com.google.ar.sceneform:filament-android:1.17.1")
     implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("androidx.compose.material:material:1.4.0-beta01")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

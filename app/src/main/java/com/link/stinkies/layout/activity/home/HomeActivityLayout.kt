@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.link.stinkies.layout.home
+package com.link.stinkies.layout.activity.home
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContentScope

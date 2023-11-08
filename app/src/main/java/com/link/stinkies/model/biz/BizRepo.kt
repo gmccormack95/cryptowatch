@@ -14,8 +14,11 @@ import com.link.stinkies.model.volley.VolleyManager
 object BizRepo {
 
     var catalog: MutableLiveData<Catalog> = MutableLiveData()
+    var volleyManager: VolleyManager? = null
 
     fun init(context: Context) {
+        volleyManager = VolleyManager.getInstance(context)
+
         val jsonObjectRequest = JsonArrayRequest(
             Request.Method.GET, Api.bizCatalog, null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
@@ -26,7 +29,22 @@ object BizRepo {
             }
         )
 
-        VolleyManager.getInstance(context).addToRequestQueue(jsonObjectRequest)
+        volleyManager?.addToRequestQueue(jsonObjectRequest)
+    }
+
+    fun refresh(onComplete: () -> Unit) {
+        val jsonObjectRequest = JsonArrayRequest(
+            Request.Method.GET, Api.bizCatalog, null, { response ->
+                Log.d("BizRepo", "Response: %s".format(response.toString()))
+                catalog.value = Catalog()
+                catalog.value?.pages = Gson().fromJson(response.toString(), object : TypeToken<List<Page>>() {}.type)
+                onComplete()
+            }, { error ->
+                Log.d("BizRepo", "Error: %s".format(error.toString()))
+            }
+        )
+
+        volleyManager?.addToRequestQueue(jsonObjectRequest)
     }
 
 }

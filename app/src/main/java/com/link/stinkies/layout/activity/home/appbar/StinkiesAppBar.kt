@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.link.stinkies.R
-import com.link.stinkies.layout.home.Screen
+import com.link.stinkies.layout.activity.home.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

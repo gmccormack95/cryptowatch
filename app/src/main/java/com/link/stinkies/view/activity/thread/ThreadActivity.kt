@@ -1,4 +1,4 @@
-package com.link.stinkies.view.activity.home
+package com.link.stinkies.view.activity.thread
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,6 +25,5 @@ class HomeActivity : ComponentActivity() {
             }
         }
 
-        BizRepo.init(this)
     }
 }
