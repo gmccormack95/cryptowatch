@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
 import com.link.stinkies.layout.activity.home.HomeActivityLayout
 import com.link.stinkies.model.biz.BizRepo
+import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.ui.theme.StinkiesTheme
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 
@@ -17,7 +18,7 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(HomeActivityVM::class.java)
-        viewModel.init(BizRepo)
+        viewModel.init(BizRepo, CoinCapRepo)
 
         setContent {
             StinkiesTheme {

@@ -1,24 +1,25 @@
 package com.link.stinkies.model.biz
 
 import android.text.Html
+import androidx.compose.ui.Modifier
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.bumptech.glide.integration.compose.CrossFade
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.composetest.model.api.Api
 import com.google.gson.annotations.SerializedName
 
-class ThreadItem {
+class Post {
 
     @SerializedName("no")
     val id: Int? = null
 
+    @SerializedName("id")
+    val userId: String? = null
+
     val name: String? = null
 
     val sub: String? = null
-        get() {
-            field?.let {
-                return Html.fromHtml(field).toString()
-            }
-
-            return field
-        }
 
     @SerializedName("com")
     val comment: String? = null
@@ -66,52 +67,6 @@ class ThreadItem {
 
     private val closed: Int? = null
 
-    /*
-
-    val sticky: Boolean? = null
-
-    val closed: Boolean? = null
-
-    val now: String? = null
-
-    val filename: String? = null
-
-    val w: Int? = null
-
-    val h: Int? = null
-
-    @SerializedName("tn_w")
-    val tnW: Int? = null
-
-    @SerializedName("tn_h")
-    val tnH: Int? = null
-
-    val time: Long? = null
-
-    val md5: String? = null
-
-    val fsize: Int? = null
-
-    val resto: Int? = null
-
-    val capcode: String? = null
-
-    @SerializedName("semantic_url")
-    val semanticURL: String? = null
-
-    val replies: Long? = null
-
-    val images: Long? = null
-
-    @SerializedName("omitted_posts")
-    val omittedPosts: Long? = null
-
-    @SerializedName("omitted_images")
-    val omittedImages: Long? = null
-
-    @SerializedName("last_modified")
-    val lastModified: Long? = null
-
-     */
+    var expanded = false
 
 }

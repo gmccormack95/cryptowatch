@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalStdlibApi::class)
 
 package com.link.stinkies.layout.activity.home
 
@@ -43,13 +43,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.link.stinkies.R
+import com.link.stinkies.layout.activity.home.thread.ThreadLayout
 import com.link.stinkies.layout.appbar.StinkiesAppBar
 import com.link.stinkies.layout.catalog.CatalogLayout
 import com.link.stinkies.layout.charts.ChartLayout
@@ -85,25 +89,24 @@ val items = listOf(
     ),
 )
 
-enum class Screen {
-    Home,
-    Biz,
-    Settings
+enum class Screen(val base: Boolean = false, val route: String) {
+    Home(base = true, route = "Home"),
+    Biz(base = true, route = "Biz"),
+    Settings(base = true, route = "Settings"),
+    Thread(route = "Thread/{threadId}")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostController = rememberNavController()) {
-    var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
-
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
-    val currentScreen = Screen.valueOf(
-        backStackEntry?.destination?.route ?: Screen.Home.name
-    )
+    val currentScreen = Screen.values().firstOrNull {
+        backStackEntry?.destination?.route?.contains(it.name) == true
+    } ?: Screen.Home
+
+    val currentDestination = backStackEntry?.destination
 
     StinkiesTheme(
         dynamicColor = false
@@ -113,24 +116,23 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
             topBar = {
                 StinkiesAppBar(
                     currentScreen = currentScreen,
-                    canNavigateBack = navController.previousBackStackEntry != null,
-                    navigateUp = { navController.navigateUp() }
+                    navigateUp = { navController.navigateUp() },
+                    refreshCatalog = { viewModel.refreshCatalog() },
+                    refreshThread = { viewModel.refreshCurrentThread() }
                 )
             },
             bottomBar = {
                 NavigationBar (
                 ) {
-                    items.forEachIndexed { index, item ->
+                    items.forEach { item ->
                         NavigationBarItem(
-                            selected = selectedItemIndex == index,
+                            selected = currentDestination?.hierarchy?.any { it.route == item.route} == true,
                             onClick = {
-                                selectedItemIndex = index
-                                navController.navigate(item.title) {
+                                navController.navigate(item.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                                        //saveState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                    //launchSingleTop = true
                                 }
                             },
                             label = {
@@ -139,7 +141,7 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                             alwaysShowLabel = false,
                             icon = {
                                 Icon(
-                                    imageVector = if (index == selectedItemIndex) {
+                                    imageVector = if (currentDestination?.hierarchy?.any { it.route == item.route} == true) {
                                         item.selectedIcon
                                     } else item.unselectedIcon,
                                     contentDescription = item.title
@@ -156,15 +158,52 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(
-                    route = Screen.Home.name,
+                    route = Screen.Home.route,
                 ) {
                     ChartLayout(viewModel)
                 }
-                composable(route = Screen.Biz.name) {
-                    CatalogLayout(viewModel)
+                composable(
+                    route = Screen.Biz.route,
+                ) {
+                    CatalogLayout(viewModel, navController)
                 }
-                composable(route = Screen.Settings.name) {
+                composable(route = Screen.Settings.route) {
                     SettingsLayout(viewModel)
+                }
+                composable(
+                    route = Screen.Thread.route,
+                    arguments = listOf(
+                        navArgument("threadId") {
+                            type = NavType.IntType
+                        }
+                    ),
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(700)
+                        )
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(700)
+                        )
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(700)
+                        )
+                    }
+                ) { navBackStackEntry ->
+                    val threadId = navBackStackEntry.arguments?.getInt("threadId") ?: -1
+                    ThreadLayout(viewModel, threadId)
                 }
             }
         }

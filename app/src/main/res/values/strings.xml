@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Stinkies</string>
-    <string name="app_bar_title">chainstinks</string>
+    <string name="app_bar_title">Chainstink</string>
+    <string name="app_bar_view_post">View Post</string>
 
     <string name="screen_home">Home</string>
     <string name="screen_biz">Biz</string>

@@ -60,6 +60,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation ("androidx.compose.runtime:runtime-livedata")
+    implementation("com.google.android.material:material:1.10.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation ("com.google.code.gson:gson:2.9.0")
@@ -70,6 +71,15 @@ dependencies {
     implementation("com.google.ar.sceneform:filament-android:1.17.1")
     implementation("androidx.navigation:navigation-compose:2.7.5")
     implementation("androidx.compose.material:material:1.4.0-beta01")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    implementation("com.patrykandpatrick.vico:compose:1.12.0")
+    implementation("com.patrykandpatrick.vico:compose-m2:1.12.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
+    implementation("com.patrykandpatrick.vico:core:1.12.0")
+
+    // For the view system.
+    implementation("com.patrykandpatrick.vico:views:1.12.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

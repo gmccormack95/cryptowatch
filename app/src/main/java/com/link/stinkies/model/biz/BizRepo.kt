@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.example.composetest.model.api.Api
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -14,6 +15,7 @@ import com.link.stinkies.model.volley.VolleyManager
 object BizRepo {
 
     var catalog: MutableLiveData<Catalog> = MutableLiveData()
+    var thread: MutableLiveData<ThreadResponse> = MutableLiveData()
     var volleyManager: VolleyManager? = null
 
     fun init(context: Context) {
@@ -32,7 +34,7 @@ object BizRepo {
         volleyManager?.addToRequestQueue(jsonObjectRequest)
     }
 
-    fun refresh(onComplete: () -> Unit) {
+    fun refreshCatalog(onComplete: () -> Unit) {
         val jsonObjectRequest = JsonArrayRequest(
             Request.Method.GET, Api.bizCatalog, null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
@@ -41,6 +43,23 @@ object BizRepo {
                 onComplete()
             }, { error ->
                 Log.d("BizRepo", "Error: %s".format(error.toString()))
+                onComplete()
+            }
+        )
+
+        volleyManager?.addToRequestQueue(jsonObjectRequest)
+    }
+
+    fun refreshThread(threadId: Int, onComplete: () -> Unit) {
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET, Api.bizThread.replace(Api.THREAD_ID, threadId.toString()), null, { response ->
+                Log.d("BizRepo", "Response: %s".format(response.toString()))
+                thread.value = Gson().fromJson(response.toString(), ThreadResponse::class.java)
+                thread.value?.threadId = threadId
+                onComplete()
+            }, { error ->
+                Log.d("BizRepo", "Error: %s".format(error.toString()))
+                onComplete()
             }
         )
 
