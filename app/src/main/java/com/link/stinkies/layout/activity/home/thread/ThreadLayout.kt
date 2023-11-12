@@ -6,6 +6,7 @@ package com.link.stinkies.layout.activity.home.thread
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,8 +40,8 @@ fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int) {
             .fillMaxSize()
             .background(background)
             .padding(
-                start = 16.dp,
-                end = 16.dp
+                start = 8.dp,
+                end = 8.dp,
             )
             .pullRefresh(pullRefreshState)
     ) {
@@ -48,11 +49,16 @@ fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int) {
             content = {
                 items(thread.value?.posts?.count() ?: 0) { index ->
                     Post(
-                        post = thread.value?.posts?.get(index)
+                        post = thread.value?.posts?.get(index),
+                        modifier = if(index == (thread.value?.posts?.size?.minus(1)))
+                            Modifier.padding(bottom = 8.dp)
+                        else
+                            Modifier
                     )
                 }
             },
             modifier = Modifier
+                .fillMaxHeight()
         )
         PullRefreshIndicator(
             isRefreshing.value == true,
