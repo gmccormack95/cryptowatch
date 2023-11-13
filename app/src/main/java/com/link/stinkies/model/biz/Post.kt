@@ -2,13 +2,8 @@ package com.link.stinkies.model.biz
 
 import android.text.Html
 import android.text.Spanned
-import androidx.compose.ui.Modifier
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.MutableLiveData
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
-import com.bumptech.glide.integration.compose.CrossFade
-import com.bumptech.glide.integration.compose.GlideImage
 import com.example.composetest.model.api.Api
 import com.google.gson.annotations.SerializedName
 
@@ -43,7 +38,13 @@ class Post {
     val spannedComment: Spanned? = null
         get() {
             rawComment?.let {
-                return HtmlCompat.fromHtml(rawComment, 0)
+                val greenText = it
+                    .replace("span class=\"quote\"", "font color=#789922")
+                    .replace(";\"", "'")
+                    .replace("</span>", "</font>")
+
+
+                return HtmlCompat.fromHtml(greenText, HtmlCompat.FROM_HTML_MODE_COMPACT)
             }
 
             return field

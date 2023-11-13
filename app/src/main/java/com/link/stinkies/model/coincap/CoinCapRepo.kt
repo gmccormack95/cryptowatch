@@ -9,11 +9,15 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.composetest.model.api.Api
 import com.google.gson.Gson
+import com.link.stinkies.layout.activity.home.charts.vico.Interval
 import com.link.stinkies.model.volley.VolleyManager
 
 object CoinCapRepo {
 
-    var linkHourly: MutableLiveData<TokenHistory> = MutableLiveData()
+    var interval: MutableLiveData<Interval> = MutableLiveData(Interval.Day1)
+    var chartData: MutableLiveData<TokenHistory> = MutableLiveData()
+    var chainlink: MutableLiveData<TokenStats> = MutableLiveData()
+    var top10: MutableLiveData<TokenTop10> = MutableLiveData()
     var volleyManager: VolleyManager? = null
 
     fun init(context: Context) {
@@ -22,34 +26,71 @@ object CoinCapRepo {
 
         mainHandler.post(object : Runnable {
             override fun run() {
-                val jsonObjectRequest = JsonObjectRequest(
-                    Request.Method.GET, Api.chainlinkHistory, null, { response ->
-                        Log.d("BizRepo", "Response: %s".format(response.toString()))
-                        linkHourly.value = Gson().fromJson(response.toString(), TokenHistory::class.java)
-                    }, { error ->
-                        Log.d("BizRepo", "Error: %s".format(error.toString()))
-                    }
-                )
-
-                volleyManager?.addToRequestQueue(jsonObjectRequest)
+                refreshCoinCap { }
                 mainHandler.postDelayed(this, 30000)
             }
         })
     }
 
     fun refreshCoinCap(onComplete: () -> Unit) {
-        val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET, Api.chainlinkHistory, null, { response ->
+        var marketHistoryResponded = false
+        var chainlinkStatsResponded = false
+        var top10Responded = false
+
+        val marketHistory = JsonObjectRequest(
+            Request.Method.GET, Api.chainlinkHistory.replace(Api.INTERVAL, interval.value?.coinCap ?: "m1"), null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
-                linkHourly.value = Gson().fromJson(response.toString(), TokenHistory::class.java)
-                onComplete()
+                chartData.value = Gson().fromJson(response.toString(), TokenHistory::class.java)
+                marketHistoryResponded = true
+                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                    onComplete()
+                }
             }, { error ->
                 Log.d("BizRepo", "Error: %s".format(error.toString()))
-                onComplete()
+                marketHistoryResponded = true
+                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                    onComplete()
+                }
             }
         )
 
-        volleyManager?.addToRequestQueue(jsonObjectRequest)
+        val chainlinkCurrent = JsonObjectRequest(
+            Request.Method.GET, Api.chainlinkStats, null, { response ->
+                Log.d("BizRepo", "Response: %s".format(response.toString()))
+                chainlink.value = Gson().fromJson(response.toString(), TokenStatsResponse::class.java).data
+                chainlinkStatsResponded = true
+                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                    onComplete()
+                }
+            }, { error ->
+                Log.d("BizRepo", "Error: %s".format(error.toString()))
+                chainlinkStatsResponded = true
+                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                    onComplete()
+                }
+            }
+        )
+
+        val top10 = JsonObjectRequest(
+            Request.Method.GET, Api.top10, null, { response ->
+                Log.d("BizRepo", "Response: %s".format(response.toString()))
+                top10.value = Gson().fromJson(response.toString(), TokenTop10::class.java)
+                top10Responded = true
+                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                    onComplete()
+                }
+            }, { error ->
+                Log.d("BizRepo", "Error: %s".format(error.toString()))
+                top10Responded = true
+                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                    onComplete()
+                }
+            }
+        )
+
+        volleyManager?.addToRequestQueue(marketHistory)
+        volleyManager?.addToRequestQueue(chainlinkCurrent)
+        volleyManager?.addToRequestQueue(top10)
     }
 
 }

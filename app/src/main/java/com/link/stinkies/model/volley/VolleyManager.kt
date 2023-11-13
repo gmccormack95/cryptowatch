@@ -42,4 +42,5 @@ class VolleyManager constructor(context: Context) {
     fun <T> addToRequestQueue(req: Request<T>) {
         requestQueue.add(req)
     }
+
 }

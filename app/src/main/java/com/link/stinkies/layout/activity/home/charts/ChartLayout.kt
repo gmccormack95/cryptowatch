@@ -47,14 +47,15 @@ import com.patrykandpatrick.vico.compose.chart.line.lineSpec
 import com.patrykandpatrick.vico.compose.component.shape.shader.verticalGradient
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.link.stinkies.ui.theme.white
+import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
 import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.ChartModelProducer
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
-fun ChartLayout(viewModel: HomeActivityVM) {
-    val isRefreshing = viewModel.coinCapLoading.observeAsState()
+fun ChartLayout(viewModel: ChartLayoutVM) {
+    val isRefreshing = viewModel.loading.observeAsState()
     val pullRefreshState = rememberPullRefreshState(
         isRefreshing.value == true,
         {
@@ -91,8 +92,10 @@ fun ChartLayout(viewModel: HomeActivityVM) {
 }
 
 @Composable
-private fun Header(viewModel: HomeActivityVM) {
-    val chainlinkHourly = viewModel.linkHourly.observeAsState()
+private fun Header(viewModel: ChartLayoutVM) {
+    val chartData = viewModel.chartData.observeAsState()
+    val chainlink = viewModel.chainlink.observeAsState()
+    val interval = viewModel.interval.observeAsState()
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,7 +105,7 @@ private fun Header(viewModel: HomeActivityVM) {
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
         Text(
-            text = "24 Hours",
+            text = interval.value?.topLabel ?: "24 Hours",
             color = Color.White.copy(alpha = .4f),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Medium,
@@ -115,13 +118,13 @@ private fun Header(viewModel: HomeActivityVM) {
             Icon(
                 Icons.Default.ArrowDropDown,
                 contentDescription = "increase-decrease icon",
-                tint = if(chainlinkHourly.value?.increase == true) financeGreen else financeRed,
+                tint = if(chartData.value?.increase == true) financeGreen else financeRed,
                 modifier = Modifier
-                    .rotate(if(chainlinkHourly.value?.increase == true) 180f else 0f)
+                    .rotate(if(chartData.value?.increase == true) 180f else 0f)
             )
             Text(
-                text = "${String.format("%.4f", chainlinkHourly.value?.priceChange)}%",
-                color = if(chainlinkHourly.value?.increase == true) financeGreen else financeRed,
+                text = "${String.format("%.4f", chartData.value?.priceChange)}%",
+                color = if(chartData.value?.increase == true) financeGreen else financeRed,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.W500,
                 fontSize = 24.sp,
@@ -129,7 +132,7 @@ private fun Header(viewModel: HomeActivityVM) {
             )
         }
         Text(
-            text = String.format("%.2f", chainlinkHourly.value?.currentPrice),
+            text = String.format("%.2f", chainlink.value?.priceUsd),
             color = Color.White,
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.ExtraBold,
@@ -149,7 +152,9 @@ private fun Header(viewModel: HomeActivityVM) {
 }
 
 @Composable
-private fun LinkStats(viewModel: HomeActivityVM) {
+private fun LinkStats(viewModel: ChartLayoutVM) {
+    val chainlink = viewModel.chainlink.observeAsState()
+
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -179,7 +184,7 @@ private fun LinkStats(viewModel: HomeActivityVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "$8,383,786,613",
+                    text = "$${chainlink.value?.marketCapUsd?.toInt()}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
@@ -197,7 +202,7 @@ private fun LinkStats(viewModel: HomeActivityVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "556,849,970 LINK",
+                    text = "${chainlink.value?.supply?.toInt()} LINK",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
@@ -224,7 +229,7 @@ private fun LinkStats(viewModel: HomeActivityVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "$1,484,712,626",
+                    text = "$${chainlink.value?.volumeUsd24Hr?.toInt()}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
@@ -242,7 +247,7 @@ private fun LinkStats(viewModel: HomeActivityVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "1,000,000,000 LINK",
+                    text = "${chainlink.value?.maxSupply?.toInt()} LINK",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
@@ -274,7 +279,9 @@ private fun LinkStats(viewModel: HomeActivityVM) {
 }
 
 @Composable
-private fun Top10(viewModel: HomeActivityVM) {
+private fun Top10(viewModel: ChartLayoutVM) {
+    val top10 = viewModel.top10.observeAsState()
+
     Column(
         modifier = Modifier
             .background(background)
@@ -287,11 +294,10 @@ private fun Top10(viewModel: HomeActivityVM) {
             modifier = Modifier
                 .padding(bottom = 16.dp)
         )
-        AssetPerformanceCard()
-        AssetPerformanceCard()
-        AssetPerformanceCard()
-        AssetPerformanceCard()
-        AssetPerformanceCard()
+
+        for(i in 0..4) {
+            AssetPerformanceCard()
+        }
     }
 }
 
