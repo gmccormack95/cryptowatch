@@ -1,5 +1,7 @@
 package com.link.stinkies.model.coincap
 
+import androidx.compose.ui.text.toLowerCase
+import com.example.composetest.model.api.Api
 import com.google.gson.annotations.SerializedName
 
 class TokenStatsResponse {
@@ -44,5 +46,10 @@ class TokenStats {
 
     @SerializedName("vwap24Hr")
     var vwap24Hr: Float? = null
+
+    var iconUrl: String? = null
+        get() {
+            return "${Api.icon}${symbol?.lowercase()}"
+        }
 
 }

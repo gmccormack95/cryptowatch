@@ -20,4 +20,6 @@ object Api {
 
     const val top10 = "https://api.coincap.io/v2/assets"
 
+    const val icon = "https://coinicons-api.vercel.app/api/icon/"
+
 }
