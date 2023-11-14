@@ -9,6 +9,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.example.composetest.model.api.Api
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.volley.VolleyManager
 
 
@@ -26,6 +27,7 @@ object BizRepo {
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
                 catalog.value = Catalog()
                 catalog.value?.pages = Gson().fromJson(response.toString(), object : TypeToken<List<Page>>() {}.type)
+                StartUp.checkInitialised()
             }, { error ->
                 Log.d("BizRepo", "Error: %s".format(error.toString()))
             }
@@ -64,6 +66,10 @@ object BizRepo {
         )
 
         volleyManager?.addToRequestQueue(jsonObjectRequest)
+    }
+
+    fun loaded(): Boolean {
+        return catalog.value != null
     }
 
 }

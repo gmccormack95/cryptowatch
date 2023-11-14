@@ -39,43 +39,10 @@ import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.link.stinkies.R
+import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.model.coincap.TokenStats
 import com.link.stinkies.ui.theme.financeGreen
 import com.link.stinkies.ui.theme.financeRed
-
-data class AssetInfo(
-    val iconDrawable: Int,
-    val name: String,
-    val tickerName: String,
-    val lastDayChange: List<Float>,
-    val currentValue: Float,
-    val total: Float,
-)
-
-private val mockAssetInfo = AssetInfo(
-    R.drawable.link_app_bar,
-    "Advanced Micro Devices, Inc.",
-    "AMD",
-    listOf(
-        113.518f,
-        113.799f,
-        113.333f,
-        113.235f,
-        114.099f,
-        113.506f,
-        113.985f,
-        114.212f,
-        114.125f,
-        113.531f,
-        114.228f,
-        113.284f,
-        114.031f,
-        113.493f,
-        113.112f
-    ),
-    113.02211f,
-    1356.26f
-)
 
 @Composable
 fun AssetPerformanceCard(
@@ -125,7 +92,12 @@ fun AssetPerformanceCard(
                 113.112f
             )
 
-            PerformanceChart(Modifier.height(40.dp).width(90.dp), lastDayChange)
+            val asd = arrayListOf<Float>()
+            for (pricePoint in CoinCapRepo.chartData.value?.data!!) {
+                pricePoint.priceUsd?.let { asd.add(it) }
+            }
+
+            PerformanceChart(Modifier.height(40.dp).width(90.dp), asd)
 
             ValueView(tokenStat.priceUsd ?: 0F)
         }

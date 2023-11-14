@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.example.composetest.model.api.Api
 import com.google.gson.Gson
 import com.link.stinkies.layout.activity.home.charts.vico.Interval
+import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.volley.VolleyManager
 
 object CoinCapRepo {
@@ -26,7 +27,9 @@ object CoinCapRepo {
 
         mainHandler.post(object : Runnable {
             override fun run() {
-                refreshCoinCap { }
+                refreshCoinCap {
+                    StartUp.checkInitialised()
+                }
                 mainHandler.postDelayed(this, 30000)
             }
         })
@@ -91,6 +94,10 @@ object CoinCapRepo {
         volleyManager?.addToRequestQueue(marketHistory)
         volleyManager?.addToRequestQueue(chainlinkCurrent)
         volleyManager?.addToRequestQueue(top10)
+    }
+
+    fun loaded(): Boolean {
+        return chartData.value != null && chainlink.value != null && top10.value != null
     }
 
 }

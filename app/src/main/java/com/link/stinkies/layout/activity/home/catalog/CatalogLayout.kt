@@ -5,6 +5,7 @@
 
 package com.link.stinkies.layout.catalog
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,6 +51,9 @@ import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import com.bumptech.glide.integration.compose.GlideSubcomposition
+import com.bumptech.glide.integration.compose.RequestBuilderTransform
+import com.bumptech.glide.integration.compose.RequestState
 import com.link.stinkies.layout.activity.home.Screen
 import com.link.stinkies.ui.theme.background
 import com.link.stinkies.ui.theme.white
@@ -117,8 +121,45 @@ private fun Thread(viewModel: HomeActivityVM, thread: ThreadItem?, navController
             defaultElevation = 10.dp
         )
     ) {
+        GlideSubcomposition(
+            model = thread?.thumbnailUrl,
+            modifier = Modifier
+                .height(150.dp)
+                .clip(
+                    RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
+                ),
+        ) {
+            when (state) {
+                RequestState.Failure ->
+                    GlideImage(
+                        model = thread?.imageUrl,
+                        contentDescription = "station image",
+                        transition = CrossFade,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .height(150.dp)
+                            .clip(
+                                RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
+                            )
+                    )
+                is RequestState.Success -> Image(
+                    painter,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .height(150.dp)
+                        .clip(
+                            RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
+                        )
+                )
+                else -> {
+
+                }
+            }
+        }
+        /*
         GlideImage(
-            model = thread?.imageUrl,
+            model = thread?.thumbnailUrl,
             contentDescription = "station image",
             transition = CrossFade,
             contentScale = ContentScale.Crop,
@@ -128,11 +169,14 @@ private fun Thread(viewModel: HomeActivityVM, thread: ThreadItem?, navController
                     RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
                 )
         )
+
+         */
         thread?.sub?.let {
             Text(
                 text = it,
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelMedium,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
                 modifier = Modifier
@@ -146,7 +190,7 @@ private fun Thread(viewModel: HomeActivityVM, thread: ThreadItem?, navController
             style = MaterialTheme.typography.labelSmall,
             maxLines = 2,
             modifier = Modifier
-                .padding(top = 4.dp, start = 4.dp, end = 4.dp, bottom = 8.dp)
+                .padding(top = 2.dp, start = 8.dp, end = 8.dp, bottom = 8.dp)
         )
     }
 }

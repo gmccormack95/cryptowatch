@@ -2,6 +2,7 @@ package com.link.stinkies.viewmodel.activity
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.model.biz.Catalog
 import com.link.stinkies.model.biz.ThreadResponse
@@ -20,8 +21,10 @@ class HomeActivityVM : ViewModel() {
     private var bizRepo: BizRepo? = null
 
     fun init(bizRepo: BizRepo, coinCapRepo: CoinCapRepo) {
+        StartUp.init(bizRepo, coinCapRepo)
+
         this.bizRepo = bizRepo
-        chartLayoutVM.init(coinCapRepo)
+        this.chartLayoutVM.init(coinCapRepo)
 
         catalog = bizRepo.catalog
         thread = bizRepo.thread

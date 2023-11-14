@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Stinkies.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/linkBlue</item>
+        <item name="postSplashScreenTheme">@style/Theme.Stinkies</item>
+    </style>
+
+</resources>

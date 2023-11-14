@@ -52,4 +52,8 @@ class TokenStats {
             return "${Api.icon}${symbol?.lowercase()}"
         }
 
+    init {
+
+    }
+
 }
