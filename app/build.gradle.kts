@@ -61,6 +61,8 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation ("androidx.compose.runtime:runtime-livedata")
     implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.compose.animation:animation-graphics-android:1.5.4")
+    implementation("androidx.databinding:databinding-runtime:8.1.3")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation ("com.google.code.gson:gson:2.9.0")
@@ -72,6 +74,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.5")
     implementation("androidx.compose.material:material:1.4.0-beta01")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.compose.animation:animation-graphics:1.3.3")
 
     implementation("com.patrykandpatrick.vico:compose:1.12.0")
     implementation("com.patrykandpatrick.vico:compose-m2:1.12.0")

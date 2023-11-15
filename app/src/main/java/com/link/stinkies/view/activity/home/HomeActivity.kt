@@ -27,7 +27,7 @@ class HomeActivity : ComponentActivity() {
         }
 
         viewModel = ViewModelProvider(this).get(HomeActivityVM::class.java)
-        viewModel.init(BizRepo, CoinCapRepo)
+        viewModel.init(this, BizRepo, CoinCapRepo)
 
         setContent {
             StinkiesTheme {

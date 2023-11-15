@@ -1,5 +1,6 @@
 package com.link.stinkies.viewmodel.activity
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.link.stinkies.model.StartUp
@@ -20,8 +21,8 @@ class HomeActivityVM : ViewModel() {
 
     private var bizRepo: BizRepo? = null
 
-    fun init(bizRepo: BizRepo, coinCapRepo: CoinCapRepo) {
-        StartUp.init(bizRepo, coinCapRepo)
+    fun init(context: Context, bizRepo: BizRepo, coinCapRepo: CoinCapRepo) {
+        StartUp.init(context, BizRepo, CoinCapRepo)
 
         this.bizRepo = bizRepo
         this.chartLayoutVM.init(coinCapRepo)

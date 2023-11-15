@@ -81,12 +81,12 @@ val items = listOf(
         unselectedIcon = Icons.Outlined.AccountCircle,
         route = Screen.Biz.name
     ),
-    /*BottomNavigationItem(
+    BottomNavigationItem(
         title = "Settings",
         selectedIcon = Icons.Filled.Settings,
         unselectedIcon = Icons.Outlined.Settings,
         route = Screen.Settings.name
-    ),*/
+    ),
 )
 
 enum class Screen(val base: Boolean = false, val route: String) {

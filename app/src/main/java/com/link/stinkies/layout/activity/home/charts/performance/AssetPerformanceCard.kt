@@ -92,12 +92,7 @@ fun AssetPerformanceCard(
                 113.112f
             )
 
-            val asd = arrayListOf<Float>()
-            for (pricePoint in CoinCapRepo.chartData.value?.data!!) {
-                pricePoint.priceUsd?.let { asd.add(it) }
-            }
-
-            PerformanceChart(Modifier.height(40.dp).width(90.dp), asd)
+            PerformanceChart(Modifier.height(40.dp).width(90.dp), lastDayChange)
 
             ValueView(tokenStat.priceUsd ?: 0F)
         }
