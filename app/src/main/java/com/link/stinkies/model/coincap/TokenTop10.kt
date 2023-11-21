@@ -15,6 +15,8 @@ class TokenTop10 {
             if(it.chartData.value == null) {
                 return false
             }
+        } ?: run {
+            return false
         }
 
         return true

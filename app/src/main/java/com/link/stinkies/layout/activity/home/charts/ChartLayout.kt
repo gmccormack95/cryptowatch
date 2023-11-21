@@ -295,10 +295,8 @@ private fun Top10(viewModel: ChartLayoutVM) {
                 .padding(bottom = 16.dp)
         )
 
-        for(i in 0..9) {
-            top10.value?.data?.get(i)?.let {
-                AssetPerformanceCard(it)
-            }
+        top10.value?.data?.forEach {
+            AssetPerformanceCard(it)
         }
     }
 }

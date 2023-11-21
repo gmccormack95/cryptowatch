@@ -98,6 +98,7 @@ fun AssetPerformanceCard(
 fun ValueView(currentValue: Float) {
     Column(
         modifier = Modifier
+            .width(80.dp)
             .padding(start = 10.dp),
         horizontalAlignment = Alignment.End
     ) {
@@ -112,48 +113,6 @@ fun ValueView(currentValue: Float) {
 
 @Composable
 fun PerformanceChart(chartData: TokenHistory) {
-    /*
-    Chart(
-        chart = lineChart(
-            axisValuesOverrider = AxisValuesOverrider.fixed(
-                minY = (chartData.low ?: 0.5f) - 0.5f,
-                maxY = (chartData.high ?: -0.5f) + 0.5f,
-            ),
-            lines = listOf(
-                lineSpec(
-                    lineColor = Color.Red,
-                    lineThickness = 1.dp,
-                    lineBackgroundShader = verticalGradient(
-                        arrayOf(
-                            white.copy(0.5f),
-                            white.copy(alpha = 0f)
-                        ),
-                    ),
-                ),
-            ),
-            spacing = 0.1.dp
-        ),
-        chartModelProducer = chartData.chartEntryModelProducer,
-        startAxis = rememberStartAxis(
-            label = null,
-            guideline = null,
-            tick = null,
-            axis = null
-        ),
-        bottomAxis = rememberBottomAxis(
-            label = null,
-            guideline = null,
-            tick = null,
-            axis = null
-        ),
-        marker = rememberMarker(),
-        isZoomEnabled = false,
-        runInitialAnimation = false,
-        modifier = Modifier
-            .height(60.dp)
-            .width(100.dp)
-    )
-    */
     val list = chartData.getPrices()
     val zipList: List<Pair<Float, Float>> = list.zipWithNext()
 
@@ -186,7 +145,7 @@ fun PerformanceChart(chartData: TokenHistory) {
                         color = lineColor,
                         start = fromPoint,
                         end = toPoint,
-                        strokeWidth = 6f
+                        strokeWidth = 4f
                     )
                 })
         }
