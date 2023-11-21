@@ -26,8 +26,8 @@ import com.link.stinkies.ui.theme.background
 
 @Composable
 fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int) {
-    val thread = viewModel.thread.observeAsState()
-    val isRefreshing = viewModel.threadLoading.observeAsState()
+    val thread = viewModel.threadLayoutVM.thread.observeAsState()
+    val isRefreshing = viewModel.threadLayoutVM.loading.observeAsState()
     val pullRefreshState = rememberPullRefreshState(
         isRefreshing.value == true,
         {
@@ -49,6 +49,7 @@ fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int) {
             content = {
                 items(thread.value?.posts?.count() ?: 0) { index ->
                     Post(
+                        viewModel = viewModel,
                         post = thread.value?.posts?.get(index),
                         modifier = if(index == (thread.value?.posts?.size?.minus(1)))
                             Modifier.padding(bottom = 8.dp)

@@ -2,6 +2,7 @@ package com.link.stinkies.model.biz
 
 import android.text.Html
 import android.text.Spanned
+import android.util.Log
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.MutableLiveData
 import com.example.composetest.model.api.Api
@@ -91,7 +92,36 @@ class Post {
 
     var now: String? = null
 
+    /*
+    var responses: ArrayList<Int>? = null
+        get() {
+            val comment = rawComment
+            val list = arrayListOf<Int>()
+
+            comment?.let {
+                while (comment.indexOf("<a href=\"#p") != -1) {
+                    val startIndex = comment.indexOf("<a href=\"#p") + 11
+                    val endIndex = startIndex + 7
+
+                    comment.substring(startIndex, endIndex).toIntOrNull()?.let {
+                        list.add(it)
+                    }
+
+                    comment.removeRange(0, endIndex)
+                }
+            }
+
+            return list
+        }
+
+     */
+
     var expanded = MutableLiveData(false)
+
+    fun hasReplied(postId: Int): Boolean {
+        Log.d("ASD", "<a href=\"#p$postId\" class=\"quotelink\">")
+        return rawComment?.contains("<a href=\"#p$postId\" class=\"quotelink\">") == true
+    }
 
 
 }

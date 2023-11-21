@@ -74,6 +74,7 @@ fun SettingsLayout(viewModel: HomeActivityVM) {
                     )
                 }
                 .wrapContentSize()
+                .align(Alignment.TopCenter)
         ){
             Image(
                 painter = painterResource(id = R.drawable.no_no_linkers),

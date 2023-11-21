@@ -3,10 +3,15 @@ package com.link.stinkies.view.activity.home
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.link.stinkies.layout.activity.home.HomeActivityLayout
+import com.link.stinkies.layout.activity.home.bottomsheet.BottomSheet
 import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.model.coincap.CoinCapRepo
@@ -30,7 +35,14 @@ class HomeActivity : ComponentActivity() {
         viewModel.init(this, BizRepo, CoinCapRepo)
 
         setContent {
-            StinkiesTheme {
+            StinkiesTheme (
+                dynamicColor = false
+            ) {
+                if (viewModel.showSheet.value) {
+                    BottomSheet {
+                        viewModel.showSheet.value = false
+                    }
+                }
                 HomeActivityLayout(viewModel)
             }
         }

@@ -5,16 +5,13 @@ package com.link.stinkies.layout.activity.home.thread.post
 import android.text.util.Linkify
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -26,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,10 +39,14 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.google.android.material.textview.MaterialTextView
 import com.link.stinkies.model.biz.Post
 import com.link.stinkies.ui.theme.white
+import com.link.stinkies.view.PostReplySpan
+import com.link.stinkies.view.PostReplyMovementMethod
+import com.link.stinkies.viewmodel.activity.HomeActivityVM
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun Post(post: Post?, modifier: Modifier) {
+fun Post(viewModel: HomeActivityVM, post: Post?, modifier: Modifier) {
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -55,13 +57,19 @@ fun Post(post: Post?, modifier: Modifier) {
             .padding(top = 8.dp)
             .fillMaxWidth(),
     ) {
-        PostHeader(post = post)
-        PostBody(post = post)
+        PostHeader(
+            viewModel = viewModel,
+            post = post
+        )
+        PostBody(
+            viewModel = viewModel,
+            post = post
+        )
     }
 }
 
 @Composable
-fun PostHeader(post: Post?) {
+fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,9 +110,7 @@ fun PostHeader(post: Post?) {
                     .padding(end = 16.dp)
             )
             IconButton(
-                onClick = {
-
-                },
+                onClick = { viewModel.showSheet.value = true },
                 modifier = Modifier
                     .size(20.dp)
             ) {
@@ -119,7 +125,10 @@ fun PostHeader(post: Post?) {
 }
 
 @Composable
-fun PostBody(post: Post?) {
+fun PostBody(viewModel: HomeActivityVM, post: Post?) {
+    val drawerState = viewModel.drawerState
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -137,11 +146,20 @@ fun PostBody(post: Post?) {
                     linksClickable = true
                     setTextColor(Color.DarkGray.toArgb())
                     setLinkTextColor(Color.Blue.toArgb())
+                    movementMethod = PostReplyMovementMethod { postId ->
+                        scope.launch {
+                            viewModel.threadLayoutVM.repliesDrawerVM.listState.scrollToItem(0)
+                            viewModel.threadLayoutVM.getReplies(postId)
+                            drawerState.open()
+                        }
+                        true
+                    }
                 }
             },
-            update = {
-                it.text = post?.spannedComment
-            }
+            update = { textView ->
+                textView.text = post?.spannedComment
+                PostReplySpan.span(textView)
+            },
         )
     }
 }
