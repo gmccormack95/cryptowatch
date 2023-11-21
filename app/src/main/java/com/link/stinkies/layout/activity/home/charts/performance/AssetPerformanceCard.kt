@@ -39,14 +39,27 @@ import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.link.stinkies.R
+import com.link.stinkies.layout.activity.home.charts.vico.rememberMarker
 import com.link.stinkies.model.coincap.CoinCapRepo
+import com.link.stinkies.model.coincap.PricePoint
+import com.link.stinkies.model.coincap.TokenHistory
 import com.link.stinkies.model.coincap.TokenStats
 import com.link.stinkies.ui.theme.financeGreen
 import com.link.stinkies.ui.theme.financeRed
+import com.link.stinkies.ui.theme.white
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.chart.line.lineSpec
+import com.patrykandpatrick.vico.compose.component.shape.shader.verticalGradient
+import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
+import com.patrykandpatrick.vico.core.entry.ChartEntry
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
 fun AssetPerformanceCard(
-    tokenStat: TokenStats
+    token: TokenStats
 ) {
     Card(
         modifier = Modifier
@@ -63,7 +76,7 @@ fun AssetPerformanceCard(
                 .fillMaxWidth()
         ) {
             GlideImage(
-                model = tokenStat.iconUrl ?: "https://coinicons-api.vercel.app/api/icon/btc",
+                model = token.iconUrl ?: "https://coinicons-api.vercel.app/api/icon/btc",
                 contentDescription = "Token icon",
                 contentScale = ContentScale.Fit,
                 transition = CrossFade,
@@ -72,29 +85,11 @@ fun AssetPerformanceCard(
                     .clip(CircleShape)
             )
 
-            TickerName(tokenStat.name ?: "", tokenStat.symbol ?: "")
+            TickerName(token.name ?: "", token.symbol ?: "")
 
-            val lastDayChange = listOf(
-                113.518f,
-                113.799f,
-                113.333f,
-                113.235f,
-                114.099f,
-                113.506f,
-                113.985f,
-                114.212f,
-                114.125f,
-                113.531f,
-                114.228f,
-                113.284f,
-                114.031f,
-                113.493f,
-                113.112f
-            )
+            token.chartData.value?.let { PerformanceChart(it) }
 
-            PerformanceChart(Modifier.height(40.dp).width(90.dp), lastDayChange)
-
-            ValueView(tokenStat.priceUsd ?: 0F)
+            ValueView(token.priceUsd ?: 0F)
         }
     }
 }
@@ -116,11 +111,57 @@ fun ValueView(currentValue: Float) {
 }
 
 @Composable
-@Preview(heightDp = 300, widthDp = 300, backgroundColor = 0xFFFFFFFF, showBackground = true)
-fun PerformanceChart(modifier: Modifier = Modifier, list: List<Float> = listOf(10f, 20f, 3f, 1f)) {
+fun PerformanceChart(chartData: TokenHistory) {
+    /*
+    Chart(
+        chart = lineChart(
+            axisValuesOverrider = AxisValuesOverrider.fixed(
+                minY = (chartData.low ?: 0.5f) - 0.5f,
+                maxY = (chartData.high ?: -0.5f) + 0.5f,
+            ),
+            lines = listOf(
+                lineSpec(
+                    lineColor = Color.Red,
+                    lineThickness = 1.dp,
+                    lineBackgroundShader = verticalGradient(
+                        arrayOf(
+                            white.copy(0.5f),
+                            white.copy(alpha = 0f)
+                        ),
+                    ),
+                ),
+            ),
+            spacing = 0.1.dp
+        ),
+        chartModelProducer = chartData.chartEntryModelProducer,
+        startAxis = rememberStartAxis(
+            label = null,
+            guideline = null,
+            tick = null,
+            axis = null
+        ),
+        bottomAxis = rememberBottomAxis(
+            label = null,
+            guideline = null,
+            tick = null,
+            axis = null
+        ),
+        marker = rememberMarker(),
+        isZoomEnabled = false,
+        runInitialAnimation = false,
+        modifier = Modifier
+            .height(60.dp)
+            .width(100.dp)
+    )
+    */
+    val list = chartData.getPrices()
     val zipList: List<Pair<Float, Float>> = list.zipWithNext()
 
-    Row(modifier = modifier) {
+    Row(
+        modifier = Modifier
+            .height(40.dp)
+            .width(70.dp)
+    ) {
         val max = list.max()
         val min = list.min()
 
@@ -145,7 +186,7 @@ fun PerformanceChart(modifier: Modifier = Modifier, list: List<Float> = listOf(1
                         color = lineColor,
                         start = fromPoint,
                         end = toPoint,
-                        strokeWidth = 3f
+                        strokeWidth = 6f
                     )
                 })
         }
@@ -173,25 +214,4 @@ private fun TickerName(name: String = "Apple Inc.", tickerName: String = "AAPL")
         )
         Text(text = tickerName, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
     }
-}
-
-@Composable
-//@Preview
-private fun AssetIcon(iconDrawable: Int = R.drawable.link_app_bar) {
-    Box(modifier = Modifier.size(50.dp), contentAlignment = Alignment.Center) {
-        Canvas(modifier = Modifier, onDraw = {
-            val radius = 65f
-            drawCircle(
-                color = Color.White,
-                radius = radius
-            )
-        })
-        Icon(
-            painter = painterResource(id = iconDrawable),
-            contentDescription = "Asset Icon",
-            modifier = Modifier
-                .size(25.dp)
-        )
-    }
-
 }

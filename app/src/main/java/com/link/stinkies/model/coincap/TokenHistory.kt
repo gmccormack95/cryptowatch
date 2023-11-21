@@ -63,7 +63,9 @@ class TokenHistory {
             return null
         }
 
-    fun chartEntryProducer(): ChartEntryModelProducer {
+    val chartEntryModelProducer = ChartEntryModelProducer()
+
+    fun updateModel() {
         val prices = arrayListOf<ChartEntry>()
 
         data.forEachIndexed { index, pricePoint ->
@@ -72,7 +74,17 @@ class TokenHistory {
             }
         }
 
-        return ChartEntryModelProducer(prices)
+        chartEntryModelProducer.setEntries(prices)
+    }
+
+    fun getPrices(): List<Float> {
+        val prices = arrayListOf<Float>()
+
+        data.forEach { price ->
+            price.priceUsd?.let { prices.add(it) }
+        }
+
+        return prices
     }
 
 }

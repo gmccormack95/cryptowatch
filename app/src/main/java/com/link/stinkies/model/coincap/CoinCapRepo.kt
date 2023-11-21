@@ -1,5 +1,6 @@
 package com.link.stinkies.model.coincap
 
+import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -33,25 +34,38 @@ object CoinCapRepo {
                 mainHandler.postDelayed(this, 30000)
             }
         })
+
+        val top10 = JsonObjectRequest(
+            Request.Method.GET, Api.top10, null, { response ->
+                Log.d("BizRepo", "Response: %s".format(response.toString()))
+                top10.value = Gson().fromJson(response.toString(), TokenTop10::class.java)
+                top10.value?.getChartData()
+                StartUp.checkInitialised()
+            }, { error ->
+                Log.d("BizRepo", "Error: %s".format(error.toString()))
+            }
+        )
+
+        volleyManager?.addToRequestQueue(top10)
     }
 
     fun refreshCoinCap(onComplete: () -> Unit) {
         var marketHistoryResponded = false
         var chainlinkStatsResponded = false
-        var top10Responded = false
 
         val marketHistory = JsonObjectRequest(
             Request.Method.GET, Api.chainlinkHistory.replace(Api.INTERVAL, interval.value?.coinCap ?: "m1"), null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
                 chartData.value = Gson().fromJson(response.toString(), TokenHistory::class.java)
+                chartData.value?.updateModel()
                 marketHistoryResponded = true
-                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                if (marketHistoryResponded && chainlinkStatsResponded) {
                     onComplete()
                 }
             }, { error ->
                 Log.d("BizRepo", "Error: %s".format(error.toString()))
                 marketHistoryResponded = true
-                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                if (marketHistoryResponded && chainlinkStatsResponded) {
                     onComplete()
                 }
             }
@@ -62,30 +76,13 @@ object CoinCapRepo {
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
                 chainlink.value = Gson().fromJson(response.toString(), TokenStatsResponse::class.java).data
                 chainlinkStatsResponded = true
-                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                if (marketHistoryResponded && chainlinkStatsResponded) {
                     onComplete()
                 }
             }, { error ->
                 Log.d("BizRepo", "Error: %s".format(error.toString()))
                 chainlinkStatsResponded = true
-                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
-                    onComplete()
-                }
-            }
-        )
-
-        val top10 = JsonObjectRequest(
-            Request.Method.GET, Api.top10, null, { response ->
-                Log.d("BizRepo", "Response: %s".format(response.toString()))
-                top10.value = Gson().fromJson(response.toString(), TokenTop10::class.java)
-                top10Responded = true
-                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
-                    onComplete()
-                }
-            }, { error ->
-                Log.d("BizRepo", "Error: %s".format(error.toString()))
-                top10Responded = true
-                if (marketHistoryResponded && chainlinkStatsResponded && top10Responded) {
+                if (marketHistoryResponded && chainlinkStatsResponded) {
                     onComplete()
                 }
             }
@@ -93,11 +90,10 @@ object CoinCapRepo {
 
         volleyManager?.addToRequestQueue(marketHistory)
         volleyManager?.addToRequestQueue(chainlinkCurrent)
-        volleyManager?.addToRequestQueue(top10)
     }
 
     fun loaded(): Boolean {
-        return chartData.value != null && chainlink.value != null && top10.value != null
+        return chartData.value != null && chainlink.value != null && top10.value?.loaded() == true
     }
 
 }

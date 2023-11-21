@@ -71,7 +71,7 @@ fun LinkChart(viewModel: ChartLayoutVM) {
                 ),
                 spacing = 0.1.dp
             ),
-            chartModelProducer = chartData.value?.chartEntryProducer() ?:
+            chartModelProducer = chartData.value?.chartEntryModelProducer ?:
             ChartEntryModelProducer(arrayListOf<ChartEntry>()),
             startAxis = rememberStartAxis(
                 label = null,
@@ -134,7 +134,7 @@ private fun Day(interval: Interval, viewModel: ChartLayoutVM) {
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             ) {
-            viewModel.interval.value = interval
+                viewModel.interval.value = interval
                 viewModel.refreshCoinCap()
             }
     ) {

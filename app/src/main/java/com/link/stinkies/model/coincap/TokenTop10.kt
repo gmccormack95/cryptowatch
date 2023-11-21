@@ -6,4 +6,18 @@ class TokenTop10 {
 
     var timestamp: Long? = null
 
+    fun getChartData() {
+        data?.forEach { it.getChartData() }
+    }
+
+    fun loaded(): Boolean {
+        data?.forEach {
+            if(it.chartData.value == null) {
+                return false
+            }
+        }
+
+        return true
+    }
+
 }
