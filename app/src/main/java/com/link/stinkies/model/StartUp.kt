@@ -19,25 +19,6 @@ object StartUp {
         this.coinCapRepo = coinCapRepo
         BizRepo.init(context)
         CoinCapRepo.init(context)
-
-        /*
-        var msg = ""
-
-        for (index in 1..330) {
-            val imageNo = if(index < 10) {
-                "00$index"
-            } else if(index < 100) {
-                "0${index}"
-            } else {
-                index
-            }
-
-            msg += "<item android:drawable=\"@drawable/ezgif_frame_${imageNo}\" android:duration=\"22\" />"
-        }
-
-        Log.d("ASDASD", msg)
-
-         */
     }
 
     fun checkInitialised() {

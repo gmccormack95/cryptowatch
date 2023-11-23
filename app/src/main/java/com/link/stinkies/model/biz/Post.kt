@@ -92,7 +92,6 @@ class Post {
 
     var now: String? = null
 
-    /*
     var responses: ArrayList<Int>? = null
         get() {
             val comment = rawComment
@@ -113,8 +112,6 @@ class Post {
 
             return list
         }
-
-     */
 
     var expanded = MutableLiveData(false)
 

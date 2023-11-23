@@ -12,7 +12,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -75,9 +75,9 @@ dependencies {
     implementation("androidx.compose.material:material:1.4.0-beta01")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.compose.animation:animation-graphics:1.3.3")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     implementation("com.patrykandpatrick.vico:compose:1.12.0")
-    implementation("com.patrykandpatrick.vico:compose-m2:1.12.0")
     implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
     implementation("com.patrykandpatrick.vico:core:1.12.0")
 

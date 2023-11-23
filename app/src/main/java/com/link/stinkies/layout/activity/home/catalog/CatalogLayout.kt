@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class,
     ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class,
-    ExperimentalMaterialApi::class, ExperimentalMaterialApi::class
+    ExperimentalMaterialApi::class, ExperimentalMaterialApi::class, ExperimentalMaterialApi::class
 )
 
 package com.link.stinkies.layout.catalog
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -49,8 +50,12 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.link.stinkies.model.biz.ThreadItem
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.bumptech.glide.integration.compose.GlideSubcomposition
 import com.bumptech.glide.integration.compose.RequestBuilderTransform
 import com.bumptech.glide.integration.compose.RequestState
@@ -121,56 +126,37 @@ private fun Thread(viewModel: HomeActivityVM, thread: ThreadItem?, navController
             defaultElevation = 10.dp
         )
     ) {
-        GlideSubcomposition(
-            model = thread?.thumbnailUrl,
-            modifier = Modifier
-                .height(150.dp)
-                .clip(
-                    RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
-                ),
-        ) {
-            when (state) {
-                RequestState.Failure ->
-                    GlideImage(
-                        model = thread?.imageUrl,
-                        contentDescription = "station image",
-                        transition = CrossFade,
+        thread?.run {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(this.thumbnailUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Thread Image",
+                contentScale = ContentScale.Crop,
+                error = {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(thread.imageUrl)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Thread Image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .height(150.dp)
                             .clip(
                                 RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
-                            )
+                            ),
                     )
-                is RequestState.Success -> Image(
-                    painter,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .height(150.dp)
-                        .clip(
-                            RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
-                        )
-                )
-                else -> {
-
-                }
-            }
+                },
+                modifier = Modifier
+                    .height(150.dp)
+                    .clip(
+                        RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
+                    ),
+            )
         }
-        /*
-        GlideImage(
-            model = thread?.thumbnailUrl,
-            contentDescription = "station image",
-            transition = CrossFade,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .height(150.dp)
-                .clip(
-                    RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)
-                )
-        )
 
-         */
         thread?.sub?.let {
             Text(
                 text = it,
