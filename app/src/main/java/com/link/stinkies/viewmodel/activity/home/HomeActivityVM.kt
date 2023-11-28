@@ -13,6 +13,8 @@ import com.link.stinkies.model.biz.ThreadResponse
 import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
 import com.link.stinkies.viewmodel.activity.home.thread.ThreadLayoutVM
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class HomeActivityVM : ViewModel() {
 
@@ -53,6 +55,14 @@ class HomeActivityVM : ViewModel() {
 
     fun refreshCurrentThread() {
         threadLayoutVM.refreshCurrentThread()
+    }
+
+    fun openReplies(scope: CoroutineScope, postId: Int) {
+        scope.launch {
+            threadLayoutVM.repliesDrawerVM.listState.scrollToItem(0)
+            threadLayoutVM.getReplies(postId)
+            drawerState.open()
+        }
     }
 
 }

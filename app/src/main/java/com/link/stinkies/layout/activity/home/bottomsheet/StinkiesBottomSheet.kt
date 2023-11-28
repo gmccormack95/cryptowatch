@@ -66,9 +66,9 @@ private fun PostBottomSheet() {
                 contentDescription = "Back",
                 tint = Color.DarkGray,
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(28.dp)
                     .rotate(270f)
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp, bottom = 8.dp)
             )
             Text(
                 "Download Image",

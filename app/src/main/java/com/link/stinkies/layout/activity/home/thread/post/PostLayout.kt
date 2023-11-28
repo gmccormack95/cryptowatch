@@ -5,6 +5,7 @@ package com.link.stinkies.layout.activity.home.thread.post
 import android.text.util.Linkify
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -157,11 +158,7 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?) {
                     setTextColor(Color.DarkGray.toArgb())
                     setLinkTextColor(Color.Blue.toArgb())
                     movementMethod = PostReplyMovementMethod { postId ->
-                        scope.launch {
-                            viewModel.threadLayoutVM.repliesDrawerVM.listState.scrollToItem(0)
-                            viewModel.threadLayoutVM.getReplies(postId)
-                            drawerState.open()
-                        }
+                        viewModel.openReplies(scope, postId)
                         true
                     }
                 }
@@ -176,10 +173,46 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?) {
 
 @Composable
 private fun PostFooter(viewModel: HomeActivityVM, post: Post?) {
-    Box(
+    val scope = rememberCoroutineScope()
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .background(Color.LightGray)
-    )
+            .padding(top = 4.dp, bottom = 8.dp, start = 8.dp, end = 8.dp)
+            .fillMaxWidth()
+    ) {
+        val replies = if(post?.replies != null) {
+            if(post.replies!! > 1) {
+                "${post.replies} Replies"
+            } else {
+                "${post.replies} Reply"
+            }
+        } else if(viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.isEmpty() == false) {
+            if(viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size!! > 1) {
+                "${viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size} Replies"
+            } else {
+                "${viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size} Reply"
+            }
+        } else {
+            ""
+        }
+
+        Text(
+            replies,
+            fontSize = 12.sp,
+            color = Color.Blue,
+            modifier = Modifier
+                .clickable {
+                    viewModel.openReplies(scope, post?.id ?: -1)
+                }
+        )
+        Text(
+            post?.now ?: "",
+            fontSize = 12.sp,
+            color = Color.DarkGray,
+            fontWeight = FontWeight.Light,
+        )
+    }
 }
 
 @Composable
@@ -196,7 +229,7 @@ private fun PostImage(post: Post?) {
                 contentDescription = "Post Image",
                 modifier = Modifier
                     .clickable {
-                        post.expanded.value = !(expandImage?.value ?: false)
+                        post.expanded.value = !(expandImage.value ?: false)
                     }
             )
         } else {
