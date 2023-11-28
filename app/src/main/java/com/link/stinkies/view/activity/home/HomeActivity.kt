@@ -38,9 +38,9 @@ class HomeActivity : ComponentActivity() {
             StinkiesTheme (
                 dynamicColor = false
             ) {
-                if (viewModel.showSheet.value) {
+                if (viewModel.bottomsheetVM.showSheet.value) {
                     BottomSheet {
-                        viewModel.showSheet.value = false
+                        viewModel.bottomsheetVM.showSheet.value = false
                     }
                 }
                 HomeActivityLayout(viewModel)

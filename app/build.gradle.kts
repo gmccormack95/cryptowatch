@@ -63,6 +63,8 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.compose.animation:animation-graphics-android:1.5.4")
     implementation("androidx.databinding:databinding-runtime:8.1.3")
+    implementation("androidx.media3:media3-database:1.2.0")
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation ("com.google.code.gson:gson:2.9.0")

@@ -121,7 +121,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
                     .padding(end = 16.dp)
             )
             IconButton(
-                onClick = { viewModel.showSheet.value = true },
+                onClick = { viewModel.bottomsheetVM.open(post?.id ?: -1) },
                 modifier = Modifier
                     .size(20.dp)
             ) {
@@ -137,7 +137,6 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
 
 @Composable
 fun PostBody(viewModel: HomeActivityVM, post: Post?) {
-    val drawerState = viewModel.drawerState
     val scope = rememberCoroutineScope()
 
     Column(
@@ -150,7 +149,7 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?) {
 
         AndroidView(
             modifier = Modifier
-                .padding(top = 4.dp, start = 4.dp, end = 4.dp, bottom = 8.dp),
+                .padding(top = 4.dp, bottom = 8.dp),
             factory = {
                 MaterialTextView(it).apply {
                     autoLinkMask = Linkify.WEB_URLS
@@ -174,11 +173,13 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?) {
 @Composable
 private fun PostFooter(viewModel: HomeActivityVM, post: Post?) {
     val scope = rememberCoroutineScope()
+    val threadLayoutVM = viewModel.threadLayoutVM
+    val replyCount: Int = (threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size ?: 0 ) -1
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .padding(top = 4.dp, bottom = 8.dp, start = 8.dp, end = 8.dp)
+            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
     ) {
         val replies = if(post?.replies != null) {
@@ -187,12 +188,10 @@ private fun PostFooter(viewModel: HomeActivityVM, post: Post?) {
             } else {
                 "${post.replies} Reply"
             }
-        } else if(viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.isEmpty() == false) {
-            if(viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size!! > 1) {
-                "${viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size} Replies"
-            } else {
-                "${viewModel.threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size} Reply"
-            }
+        } else if(replyCount > 1) {
+            "$replyCount Replies"
+        } else if(replyCount > 0) {
+            "$replyCount Reply"
         } else {
             ""
         }
@@ -200,7 +199,7 @@ private fun PostFooter(viewModel: HomeActivityVM, post: Post?) {
         Text(
             replies,
             fontSize = 12.sp,
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
             modifier = Modifier
                 .clickable {
                     viewModel.openReplies(scope, post?.id ?: -1)

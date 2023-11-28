@@ -12,6 +12,7 @@ import com.link.stinkies.model.biz.Catalog
 import com.link.stinkies.model.biz.ThreadResponse
 import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
+import com.link.stinkies.viewmodel.activity.home.bottomsheet.BottomSheetVM
 import com.link.stinkies.viewmodel.activity.home.thread.ThreadLayoutVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -20,8 +21,7 @@ class HomeActivityVM : ViewModel() {
 
     var chartLayoutVM = ChartLayoutVM()
     var threadLayoutVM = ThreadLayoutVM()
-
-    var showSheet = mutableStateOf(false)
+    var bottomsheetVM = BottomSheetVM()
 
     val drawerState = DrawerState(initialValue = DrawerValue.Closed)
 

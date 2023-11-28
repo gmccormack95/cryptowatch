@@ -73,6 +73,8 @@ private fun PostBottomSheet() {
             Text(
                 "Download Image",
                 color = Color.DarkGray,
+                modifier = Modifier
+                    .padding(top = 4.dp)
             )
         }
         Row(
@@ -89,12 +91,14 @@ private fun PostBottomSheet() {
                 contentDescription = "Back",
                 tint = Color.DarkGray,
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(28.dp)
                     .padding(end = 8.dp)
             )
             Text(
                 "Copy Text",
                 color = Color.DarkGray,
+                modifier = Modifier
+                    .padding(bottom = 2.dp)
             )
         }
         Row(
@@ -111,7 +115,7 @@ private fun PostBottomSheet() {
                 contentDescription = "Back",
                 tint = Color.DarkGray,
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(28.dp)
                     .padding(end = 8.dp)
             )
             Text(
