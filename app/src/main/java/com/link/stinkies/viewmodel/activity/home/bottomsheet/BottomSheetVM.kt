@@ -8,7 +8,7 @@ class BottomSheetVM : ViewModel() {
     var showSheet = mutableStateOf(false)
     var postId: Int? = null
 
-    fun open(postId: Int) {
+    fun open(postId: Int?) {
         showSheet.value = true
         this.postId = postId
     }

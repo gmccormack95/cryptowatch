@@ -6,7 +6,7 @@ class ThreadResponse {
 
     var posts: ArrayList<Post> = arrayListOf()
 
-    fun getReplies(postId: Int): ArrayList<Post> {
+    fun getReplies(postId: Int?): ArrayList<Post> {
         val chain: ArrayList<Post> = arrayListOf()
 
         posts.firstOrNull{ it.id == postId }?.let {

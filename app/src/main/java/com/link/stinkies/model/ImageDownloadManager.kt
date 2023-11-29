@@ -11,7 +11,11 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.media3.database.StandaloneDatabaseProvider
+import com.bumptech.glide.Glide
 import com.link.stinkies.model.biz.Post
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -25,33 +29,47 @@ import java.net.URL
 
 object ImageDownloadManager {
 
-    fun get(post: Post?) {
-        /*
-        // Note: This should be a singleton in your app.
-        val databaseProvider = StandaloneDatabaseProvider(context)
-
-        // A download cache should not evict media, so should use a NoopCacheEvictor.
-        val downloadCache = SimpleCache(downloadDirectory, NoOpCacheEvictor(), databaseProvider)
-
-        // Create a factory for reading the data from the network.
-        val dataSourceFactory = DefaultHttpDataSource.Factory()
-
-        // Choose an executor for downloading data. Using Runnable::run will cause each download task to
-        // download data on its own thread. Passing an executor that uses multiple threads will speed up
-        // download tasks that can be split into smaller parts for parallel execution. Applications that
-        // already have an executor for background downloads may wish to reuse their existing executor.
-        val downloadExecutor = Executor(Runnable::run)
-
-        // Create the download manager.
-        val downloadManager =
-                    DownloadManager(context, databaseProvider, downloadCache, dataSourceFactory, downloadExecutor)
-
-        // Optionally, properties can be assigned to configure the download manager.
-        downloadManager.requirements = requirements
-        downloadManager.maxParallelDownloads = 3
-        */
+    fun get(context: Context, post: Post?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            saveImage(Glide.with(context)
+                .asBitmap()
+                .load("https://i.imgur.com/4HFRb2z.jpg") // sample image
+                .placeholder(android.R.drawable.progress_indeterminate_horizontal) // need placeholder to avoid issue like glide annotations
+                .error(android.R.drawable.stat_notify_error) // need error to avoid issue like glide annotations
+                .submit()
+                .get()
+            )
+        }
     }
 
+    private fun saveImage(image: Bitmap): String? {
+        var savedImagePath: String? = null
+        val imageFileName = "JPEG_" + "FILE_NAME" + ".jpg"
+        val storageDir = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                .toString() + "/YOUR_FOLDER_NAME"
+        )
+        var success = true
+        if (!storageDir.exists()) {
+            success = storageDir.mkdirs()
+        }
+        if (success) {
+            val imageFile = File(storageDir, imageFileName)
+            savedImagePath = imageFile.getAbsolutePath()
+            try {
+                val fOut: OutputStream = FileOutputStream(imageFile)
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
+                fOut.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            // Add the image to the system gallery
+            //galleryAddPic(savedImagePath)
+            //Toast.makeText(this, "IMAGE SAVED", Toast.LENGTH_LONG).show() // to make this working, need to manage coroutine, as this execution is something off the main thread
+        }
+        return savedImagePath
+    }
     /*
     private fun load(string: String): Bitmap? {
         val url = stringToURL(string)

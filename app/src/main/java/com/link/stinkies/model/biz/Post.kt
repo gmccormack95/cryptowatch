@@ -117,8 +117,7 @@ class Post {
 
     var replies: Int? = null
 
-    fun hasReplied(postId: Int): Boolean {
-        Log.d("ASD", "<a href=\"#p$postId\" class=\"quotelink\">")
+    fun hasReplied(postId: Int?): Boolean {
         return rawComment?.contains("<a href=\"#p$postId\" class=\"quotelink\">") == true
     }
 

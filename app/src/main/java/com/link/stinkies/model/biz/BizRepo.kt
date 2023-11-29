@@ -52,9 +52,9 @@ object BizRepo {
         volleyManager?.addToRequestQueue(jsonObjectRequest)
     }
 
-    fun refreshThread(threadId: Int, onComplete: () -> Unit) {
+    fun refreshThread(threadId: Int?, onComplete: () -> Unit) {
         val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET, Api.bizThread.replace(Api.THREAD_ID, threadId.toString()), null, { response ->
+            Request.Method.GET, Api.bizThread.replace(Api.THREAD_ID, threadId?.toString() ?: ""), null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
                 thread.value = Gson().fromJson(response.toString(), ThreadResponse::class.java)
                 thread.value?.threadId = threadId

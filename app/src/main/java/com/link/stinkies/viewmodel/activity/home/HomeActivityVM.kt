@@ -23,8 +23,6 @@ class HomeActivityVM : ViewModel() {
     var threadLayoutVM = ThreadLayoutVM()
     var bottomsheetVM = BottomSheetVM()
 
-    val drawerState = DrawerState(initialValue = DrawerValue.Closed)
-
     var catalog: MutableLiveData<Catalog> = MutableLiveData()
     var catalogLoading: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -57,12 +55,8 @@ class HomeActivityVM : ViewModel() {
         threadLayoutVM.refreshCurrentThread()
     }
 
-    fun openReplies(scope: CoroutineScope, postId: Int) {
-        scope.launch {
-            threadLayoutVM.repliesDrawerVM.listState.scrollToItem(0)
-            threadLayoutVM.getReplies(postId)
-            drawerState.open()
-        }
+    fun openReplies(postId: Int?) {
+        threadLayoutVM.getReplies(postId)
     }
 
 }

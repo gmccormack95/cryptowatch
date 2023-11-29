@@ -12,7 +12,6 @@ import com.link.stinkies.model.biz.Post
 class RepliesDrawerVM : ViewModel() {
 
     var replies: MutableLiveData<ArrayList<Post>> = MutableLiveData()
-    val listState = LazyListState()
 
     fun init() {
 

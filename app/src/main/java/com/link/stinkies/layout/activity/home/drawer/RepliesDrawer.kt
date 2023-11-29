@@ -13,9 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.DrawerState
+import androidx.compose.material.DrawerValue
 import androidx.compose.material.ModalDrawer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,12 +50,10 @@ import com.link.stinkies.viewmodel.activity.home.replies.RepliesDrawerVM
 import kotlinx.coroutines.launch
 
 @Composable
-fun RepliesDrawer(viewModel: HomeActivityVM, content: @Composable () -> Unit) {
+fun RepliesDrawer(viewModel: HomeActivityVM, drawerState: DrawerState, content: @Composable () -> Unit) {
     val repliesDrawerVM = viewModel.threadLayoutVM.repliesDrawerVM
     val replies = repliesDrawerVM.replies.observeAsState()
-    val drawerState = viewModel.drawerState
     val scope = rememberCoroutineScope()
-    val listState = viewModel.threadLayoutVM.repliesDrawerVM.listState
 
     BackHandler(
         enabled = drawerState.isOpen,
@@ -105,12 +106,13 @@ fun RepliesDrawer(viewModel: HomeActivityVM, content: @Composable () -> Unit) {
                             }
                         )
                         LazyColumn(
-                            state = listState,
+                            state = rememberLazyListState(),
                             content = {
                                 items(replies.value?.count() ?: 0) { index ->
                                     Post(
                                         viewModel = viewModel,
                                         post = replies.value?.get(index),
+                                        drawerState = drawerState,
                                         modifier = Modifier
                                             .then(
                                                 when (index) {
@@ -118,10 +120,10 @@ fun RepliesDrawer(viewModel: HomeActivityVM, content: @Composable () -> Unit) {
                                                         Modifier.padding(bottom = 4.dp)
                                                     }
                                                     (replies.value?.size ?: 0) -1 -> {
-                                                        Modifier.padding(start = 16.dp, bottom = 16.dp)
+                                                        Modifier.padding(start = 14.dp, bottom = 16.dp)
                                                     }
                                                     else -> {
-                                                        Modifier.padding(start = 16.dp, bottom = 4.dp)
+                                                        Modifier.padding(start = 14.dp, bottom = 4.dp)
                                                     }
                                                 }
                                             )
@@ -144,6 +146,5 @@ fun RepliesDrawer(viewModel: HomeActivityVM, content: @Composable () -> Unit) {
                 }
             },
         )
-
     }
 }

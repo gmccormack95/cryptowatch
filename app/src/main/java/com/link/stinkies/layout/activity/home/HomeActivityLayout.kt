@@ -2,9 +2,11 @@
 
 package com.link.stinkies.layout.activity.home
 
+import android.util.Log.d
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -12,14 +14,19 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -38,6 +45,7 @@ import com.link.stinkies.layout.catalog.CatalogLayout
 import com.link.stinkies.layout.charts.ChartLayout
 import com.link.stinkies.layout.settings.SettingsLayout
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
+import kotlinx.coroutines.launch
 
 data class BottomNavigationItem(
     val title: String,
@@ -77,25 +85,34 @@ enum class Screen(val base: Boolean = false, val route: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostController = rememberNavController()) {
-    // Get current back stack entry
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val gridState = rememberLazyStaggeredGridState()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
     val currentScreen = Screen.values().firstOrNull {
         backStackEntry?.destination?.route?.contains(it.name) == true
     } ?: Screen.Home
-
     val currentDestination = backStackEntry?.destination
 
+
     RepliesDrawer (
-        viewModel = viewModel
+        viewModel = viewModel,
+        drawerState = drawerState
     ) {
         Scaffold (
             topBar = {
                 StinkiesAppBar(
                     currentScreen = currentScreen,
                     navigateUp = { navController.navigateUp() },
-                    refreshCatalog = { viewModel.refreshCatalog() },
-                    refreshThread = { viewModel.refreshCurrentThread() }
+                    refreshCatalog = {
+                        viewModel.refreshCatalog()
+                        scope.launch {
+                            gridState.animateScrollToItem(0)
+                        }
+                    },
+                    refreshThread = {
+                        viewModel.refreshCurrentThread()
+                    }
                 )
             },
             bottomBar = {
@@ -142,7 +159,7 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                 composable(
                     route = Screen.Biz.route,
                 ) {
-                    CatalogLayout(viewModel, navController)
+                    CatalogLayout(viewModel, navController, gridState)
                 }
                 composable(route = Screen.Settings.route) {
                     SettingsLayout(viewModel)
@@ -180,7 +197,7 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                     }
                 ) { navBackStackEntry ->
                     val threadId = navBackStackEntry.arguments?.getInt("threadId") ?: -1
-                    ThreadLayout(viewModel, threadId)
+                    ThreadLayout(viewModel, threadId, drawerState)
                 }
             }
         }

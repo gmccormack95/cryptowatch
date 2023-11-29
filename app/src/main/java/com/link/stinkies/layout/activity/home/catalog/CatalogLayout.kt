@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -36,6 +38,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,7 +67,7 @@ import com.link.stinkies.ui.theme.background
 import com.link.stinkies.ui.theme.white
 
 @Composable
-fun CatalogLayout(viewModel: HomeActivityVM, navController: NavController) {
+fun CatalogLayout(viewModel: HomeActivityVM, navController: NavController, gridState: LazyStaggeredGridState) {
     val catalog = viewModel.catalog.observeAsState()
     val isRefreshing = viewModel.catalogLoading.observeAsState()
     val pullRefreshState = rememberPullRefreshState(
@@ -84,7 +87,7 @@ fun CatalogLayout(viewModel: HomeActivityVM, navController: NavController) {
             columns = StaggeredGridCells.Fixed(2),
             verticalItemSpacing = 8.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            state = rememberLazyStaggeredGridState(),
+            state = gridState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(

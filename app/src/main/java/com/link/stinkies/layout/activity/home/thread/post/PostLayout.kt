@@ -3,6 +3,7 @@
 package com.link.stinkies.layout.activity.home.thread.post
 
 import android.text.util.Linkify
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,11 +21,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -53,7 +56,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun Post(viewModel: HomeActivityVM, post: Post?, modifier: Modifier) {
+fun Post(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?, modifier: Modifier) {
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -70,11 +73,13 @@ fun Post(viewModel: HomeActivityVM, post: Post?, modifier: Modifier) {
         )
         PostBody(
             viewModel = viewModel,
-            post = post
+            post = post,
+            drawerState = drawerState
         )
         PostFooter(
             viewModel = viewModel,
-            post = post
+            post = post,
+            drawerState = drawerState
         )
     }
 }
@@ -121,7 +126,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
                     .padding(end = 16.dp)
             )
             IconButton(
-                onClick = { viewModel.bottomsheetVM.open(post?.id ?: -1) },
+                onClick = { viewModel.bottomsheetVM.open(post?.id) },
                 modifier = Modifier
                     .size(20.dp)
             ) {
@@ -136,7 +141,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
 }
 
 @Composable
-fun PostBody(viewModel: HomeActivityVM, post: Post?) {
+fun PostBody(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?) {
     val scope = rememberCoroutineScope()
 
     Column(
@@ -157,7 +162,10 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?) {
                     setTextColor(Color.DarkGray.toArgb())
                     setLinkTextColor(Color.Blue.toArgb())
                     movementMethod = PostReplyMovementMethod { postId ->
-                        viewModel.openReplies(scope, postId)
+                        scope.launch {
+                            drawerState.open()
+                        }
+                        viewModel.openReplies(postId)
                         true
                     }
                 }
@@ -171,10 +179,10 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?) {
 }
 
 @Composable
-private fun PostFooter(viewModel: HomeActivityVM, post: Post?) {
+private fun PostFooter(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?) {
     val scope = rememberCoroutineScope()
     val threadLayoutVM = viewModel.threadLayoutVM
-    val replyCount: Int = (threadLayoutVM.thread.value?.getReplies(post?.id ?: -1)?.size ?: 0 ) -1
+    val replyCount: Int = (threadLayoutVM.thread.value?.getReplies(post?.id)?.size ?: 0 ) -1
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -183,7 +191,7 @@ private fun PostFooter(viewModel: HomeActivityVM, post: Post?) {
             .fillMaxWidth()
     ) {
         val replies = if(post?.replies != null) {
-            if(post.replies!! > 1) {
+            if(post.replies!! > 1 || post.replies!! == 0) {
                 "${post.replies} Replies"
             } else {
                 "${post.replies} Reply"
@@ -199,10 +207,13 @@ private fun PostFooter(viewModel: HomeActivityVM, post: Post?) {
         Text(
             replies,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .clickable {
-                    viewModel.openReplies(scope, post?.id ?: -1)
+                    scope.launch {
+                        drawerState.open()
+                    }
+                    viewModel.openReplies(post?.id)
                 }
         )
         Text(

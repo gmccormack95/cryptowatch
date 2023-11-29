@@ -1,5 +1,7 @@
 package com.link.stinkies.viewmodel.activity.home.thread
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.link.stinkies.model.biz.BizRepo
@@ -36,12 +38,12 @@ class ThreadLayoutVM : ViewModel() {
         if (loading.value == true) return
 
         loading.value = true
-        bizRepo?.refreshThread(thread.value?.threadId ?: -1) {
+        bizRepo?.refreshThread(thread.value?.threadId) {
             loading.value = false
         }
     }
 
-    fun getReplies(postId: Int) {
+    fun getReplies(postId: Int?) {
         repliesDrawerVM.replies.value = thread.value?.getReplies(postId)
     }
 
