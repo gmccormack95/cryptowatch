@@ -1,16 +1,10 @@
 package com.example.composetest.model.api
 
+import com.link.stinkies.layout.activity.home.charts.vico.Interval
+import com.link.stinkies.model.Constant.INTERVAL
+import com.link.stinkies.model.Constant.THREAD_ID
+
 object Api {
-
-    const val THREAD_ID = "{THREAD_ID}"
-
-    const val INTERVAL = "{INTERVAL}"
-
-    const val ASSET = "{ASSET}"
-
-    const val START_TIME = "{START_TIME}"
-
-    const val END_TIME = "{END_TIME}"
 
     const val bizEndpoint = "https://a.4cdn.org/biz"
 
@@ -27,6 +21,16 @@ object Api {
     const val top10 = "https://api.coincap.io/v2/assets?limit=10"
 
     const val icon = "https://coinicons-api.vercel.app/api/icon/"
+
+    fun getChainlinkHistory(interval: Interval?): String {
+        interval?.let {
+            val end = System.currentTimeMillis()
+            val start = end - interval.milliseconds
+            return "https://api.coincap.io/v2/assets/chainlink/history?interval=${interval.coinCapValue}&start=$start&end=$end"
+        }
+
+        return ""
+    }
 
     fun getHistory(asset: String): String {
         var end = System.currentTimeMillis()

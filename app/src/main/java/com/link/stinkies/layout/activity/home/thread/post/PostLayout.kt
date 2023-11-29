@@ -53,11 +53,14 @@ import com.link.stinkies.ui.theme.white
 import com.link.stinkies.view.PostReplySpan
 import com.link.stinkies.view.PostReplyMovementMethod
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun Post(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?, modifier: Modifier) {
+    val scope = rememberCoroutineScope()
+
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -75,12 +78,14 @@ fun Post(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?, modif
         PostBody(
             viewModel = viewModel,
             post = post,
-            drawerState = drawerState
+            drawerState = drawerState,
+            scope = scope
         )
         PostFooter(
             viewModel = viewModel,
             post = post,
-            drawerState = drawerState
+            drawerState = drawerState,
+            scope = scope
         )
     }
 }
@@ -142,9 +147,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
 }
 
 @Composable
-fun PostBody(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?) {
-    val scope = rememberCoroutineScope()
-
+fun PostBody(viewModel: HomeActivityVM, post: Post?, drawerState: DrawerState, scope: CoroutineScope) {
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -180,8 +183,7 @@ fun PostBody(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?) {
 }
 
 @Composable
-private fun PostFooter(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?) {
-    val scope = rememberCoroutineScope()
+private fun PostFooter(viewModel: HomeActivityVM, post: Post?, drawerState: DrawerState, scope: CoroutineScope) {
     val threadLayoutVM = viewModel.threadLayoutVM
     val replyCount: Int = (threadLayoutVM.thread.value?.getReplies(post?.id)?.size ?: 0 ) -1
 

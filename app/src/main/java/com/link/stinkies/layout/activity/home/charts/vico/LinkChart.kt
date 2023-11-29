@@ -17,13 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.link.stinkies.model.Constant
 import com.link.stinkies.ui.theme.white
-import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
@@ -35,11 +33,11 @@ import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
-enum class Interval(var label: String, var topLabel: String, var coinCap: String) {
-    Day1(label = "1D", topLabel = "24 Hours",coinCap = "m1"),
-    Week1(label = "7D", topLabel = "7 Days", coinCap = "m30"),
-    Month1(label = "1M", topLabel = "1 Month", coinCap = "h1"),
-    Year1(label = "1Y", topLabel = "1 Year", coinCap = "h12"),
+enum class Interval(var label: String, var topLabel: String, var coinCapValue: String, var milliseconds: Long) {
+    Day1(label = "1D", topLabel = "24 Hours",coinCapValue = "m1", milliseconds = Constant.DAY_MILLI),
+    Week1(label = "7D", topLabel = "7 Days", coinCapValue = "h1", milliseconds = Constant.WEEK_MILLI),
+    Month1(label = "1M", topLabel = "1 Month", coinCapValue = "h1", milliseconds = Constant.MONTH_MILLI),
+    Year1(label = "1Y", topLabel = "1 Year", coinCapValue = "h12", milliseconds = Constant.YEAR_MILLI),
 }
 
 @Composable

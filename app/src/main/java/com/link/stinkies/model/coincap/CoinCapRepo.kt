@@ -1,6 +1,5 @@
 package com.link.stinkies.model.coincap
 
-import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -54,7 +53,7 @@ object CoinCapRepo {
         var chainlinkStatsResponded = false
 
         val marketHistory = JsonObjectRequest(
-            Request.Method.GET, Api.chainlinkHistory.replace(Api.INTERVAL, interval.value?.coinCap ?: "m1"), null, { response ->
+            Request.Method.GET, Api.getChainlinkHistory(interval.value), null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
                 chartData.value = Gson().fromJson(response.toString(), TokenHistory::class.java)
                 chartData.value?.updateModel()
