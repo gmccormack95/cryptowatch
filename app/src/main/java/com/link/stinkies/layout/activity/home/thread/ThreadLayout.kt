@@ -4,6 +4,7 @@
 
 package com.link.stinkies.layout.activity.home.thread
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -20,6 +21,7 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -27,16 +29,29 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import com.link.stinkies.layout.activity.home.thread.post.Post
 import com.link.stinkies.ui.theme.background
+import kotlinx.coroutines.launch
 
 @Composable
 fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int, drawerState: DrawerState) {
     val listState = LazyListState()
+    val scope = rememberCoroutineScope()
     val thread = viewModel.threadLayoutVM.thread.observeAsState()
     val isRefreshing = viewModel.threadLayoutVM.loading.observeAsState()
     val pullRefreshState = rememberPullRefreshState(
         isRefreshing.value == true,
         {
             viewModel.refreshThread(threadId)
+        }
+    )
+
+    BackHandler(
+        enabled = drawerState.isOpen,
+        onBack = {
+            if (drawerState.isOpen) {
+                scope.launch {
+                    drawerState.close()
+                }
+            }
         }
     )
 

@@ -9,6 +9,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.example.composetest.model.api.Api
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.link.stinkies.model.Constant
 import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.volley.VolleyManager
 
@@ -54,7 +55,7 @@ object BizRepo {
 
     fun refreshThread(threadId: Int?, onComplete: () -> Unit) {
         val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET, Api.bizThread.replace(Api.THREAD_ID, threadId?.toString() ?: ""), null, { response ->
+            Request.Method.GET, Api.bizThread.replace(Constant.THREAD_ID, threadId?.toString() ?: ""), null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
                 thread.value = Gson().fromJson(response.toString(), ThreadResponse::class.java)
                 thread.value?.threadId = threadId
