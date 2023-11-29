@@ -18,6 +18,6 @@ object Constant {
 
     const val MONTH_MILLI: Long = 4 * WEEK_MILLI
 
-    const val YEAR_MILLI: Long = 52 * MONTH_MILLI
+    const val YEAR_MILLI: Long = 52 * WEEK_MILLI
 
 }

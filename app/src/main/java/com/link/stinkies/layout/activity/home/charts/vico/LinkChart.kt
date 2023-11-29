@@ -35,7 +35,7 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 enum class Interval(var label: String, var topLabel: String, var coinCapValue: String, var milliseconds: Long) {
     Day1(label = "1D", topLabel = "24 Hours",coinCapValue = "m1", milliseconds = Constant.DAY_MILLI),
-    Week1(label = "7D", topLabel = "7 Days", coinCapValue = "h1", milliseconds = Constant.WEEK_MILLI),
+    Week1(label = "7D", topLabel = "7 Days", coinCapValue = "m30", milliseconds = Constant.WEEK_MILLI),
     Month1(label = "1M", topLabel = "1 Month", coinCapValue = "h1", milliseconds = Constant.MONTH_MILLI),
     Year1(label = "1Y", topLabel = "1 Year", coinCapValue = "h12", milliseconds = Constant.YEAR_MILLI),
 }
@@ -67,7 +67,7 @@ fun LinkChart(viewModel: ChartLayoutVM) {
                         ),
                     ),
                 ),
-                spacing = 0.1.dp
+                spacing = 0.2.dp
             ),
             chartModelProducer = chartData.value?.chartEntryModelProducer ?:
             ChartEntryModelProducer(arrayListOf<ChartEntry>()),
