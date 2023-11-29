@@ -22,29 +22,35 @@ public class PostReplySpan extends ClickableSpan {
 
     public static void span(TextView view, boolean withUnderline) {
         CharSequence text = view.getText();
-        String string = text.toString();
-        PostReplySpan span = new PostReplySpan(withUnderline);
 
-        int start = string.indexOf(">>");
-        int end = start + 10;
+        while (true) {
+            String string = text.toString();
+            PostReplySpan span = new PostReplySpan(withUnderline);
+            int start = string.indexOf(">>");
+            int end = start + 10;
 
-        if (start == -1) {
-            return;
-        } else {
-            try{
-                CharSequence idCheck = text.subSequence(start + 2, end);
-                postId = Integer.parseInt(idCheck.toString());
-            } catch (NumberFormatException e) {
+            if (start == -1) {
                 return;
+            } else {
+                try{
+                    CharSequence idCheck = text.subSequence(start + 2, end);
+                    postId = Integer.parseInt(idCheck.toString());
+                } catch (NumberFormatException e) {
+                    return;
+                }
             }
-        }
 
-        if (text instanceof Spannable) {
-            ((Spannable) text).setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else {
-            SpannableString s = SpannableString.valueOf(text);
-            s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            view.setText(s);
+            if (text instanceof Spannable) {
+                ((Spannable) text).setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                SpannableString s = SpannableString.valueOf(text);
+                s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                view.setText(s);
+            }
+
+            if(text.length() - 1 <= end) return;
+
+            text = text.subSequence(end, text.length() - 1);
         }
     }
 

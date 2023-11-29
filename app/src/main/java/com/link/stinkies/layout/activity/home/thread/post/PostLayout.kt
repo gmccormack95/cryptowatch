@@ -112,7 +112,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${post?.name} (ID: ${post?.userId ?: ""})",
+                text = "${post?.name?.take(25)} (ID: ${post?.userId ?: ""})",
                 fontSize = 12.sp,
                 color = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier

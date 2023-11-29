@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int, drawerState: DrawerState) {
-    val listState = LazyListState()
+    val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val thread = viewModel.threadLayoutVM.thread.observeAsState()
     val isRefreshing = viewModel.threadLayoutVM.loading.observeAsState()
