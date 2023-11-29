@@ -117,6 +117,13 @@ class Post {
 
     var replies: Int? = null
 
+    var filename: String? = null
+
+    var extension: String? = null
+        get() {
+            return ext
+        }
+
     fun hasReplied(postId: Int?): Boolean {
         return rawComment?.contains("<a href=\"#p$postId\" class=\"quotelink\">") == true
     }

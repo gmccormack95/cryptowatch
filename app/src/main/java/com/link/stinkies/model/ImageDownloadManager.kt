@@ -1,53 +1,50 @@
 package com.link.stinkies.model
 
-import android.app.DownloadManager
-import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
-import android.provider.MediaStore
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.media3.database.StandaloneDatabaseProvider
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.model.biz.Post
+import com.link.stinkies.model.volley.VolleyManager
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
 import java.io.OutputStream
-import java.net.HttpURLConnection
-import java.net.MalformedURLException
-import java.net.URL
 
 
 object ImageDownloadManager {
 
     fun get(context: Context, post: Post?) {
         CoroutineScope(Dispatchers.IO).launch {
-            saveImage(Glide.with(context)
-                .asBitmap()
-                .load("https://i.imgur.com/4HFRb2z.jpg") // sample image
-                .placeholder(android.R.drawable.progress_indeterminate_horizontal) // need placeholder to avoid issue like glide annotations
-                .error(android.R.drawable.stat_notify_error) // need error to avoid issue like glide annotations
-                .submit()
-                .get()
+            saveImage(
+                context,
+                post,
+                Glide.with(context)
+                    .asBitmap()
+                    .load(post?.imageUrl) // sample image
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal) // need placeholder to avoid issue like glide annotations
+                    .error(android.R.drawable.stat_notify_error) // need error to avoid issue like glide annotations
+                    .submit()
+                    .get()
             )
         }
     }
 
-    private fun saveImage(image: Bitmap): String? {
+    private fun saveImage(context: Context, post: Post?, image: Bitmap): String? {
         var savedImagePath: String? = null
-        val imageFileName = "JPEG_" + "FILE_NAME" + ".jpg"
+        val imageFileName = "${post?.filename}${post?.extension}"
         val storageDir = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                .toString() + "/YOUR_FOLDER_NAME"
+                .toString() + "/memefolder"
         )
         var success = true
         if (!storageDir.exists()) {
@@ -65,59 +62,23 @@ object ImageDownloadManager {
             }
 
             // Add the image to the system gallery
-            //galleryAddPic(savedImagePath)
+            galleryAddPic(context, savedImagePath)
             //Toast.makeText(this, "IMAGE SAVED", Toast.LENGTH_LONG).show() // to make this working, need to manage coroutine, as this execution is something off the main thread
         }
         return savedImagePath
     }
-    /*
-    private fun load(string: String): Bitmap? {
-        val url = stringToURL(string)
-        val connection: HttpURLConnection?
-        try {
-            connection = url?.openConnection() as HttpURLConnection
-            connection.connect()
-            val inputStream: InputStream = connection.inputStream
-            val bufferedInputStream = BufferedInputStream(inputStream)
-            return BitmapFactory.decodeStream(bufferedInputStream)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
-    }
 
-    private fun stringToURL(string: String): URL? {
-        try {
-            return URL(string)
-        } catch (e: MalformedURLException) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
-    private fun saveMediaToStorage(bitmap: Bitmap?) {
-        val filename = "${System.currentTimeMillis()}.jpg"
-        var fos: OutputStream? = null
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            this.contentResolver?.also { resolver ->
-                val contentValues = ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-                }
-                val imageUri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-                fos = imageUri?.let { resolver.openOutputStream(it) }
+    private fun galleryAddPic(context: Context, imagePath: String?) {
+        imagePath?.let { path ->
+            val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+            val f = File(path)
+            val contentUri: Uri = Uri.fromFile(f)
+            mediaScanIntent.data = contentUri
+            context.sendBroadcast(mediaScanIntent)
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(context, "Image downloaded", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            val imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-            val image = File(imagesDir, filename)
-            fos = FileOutputStream(image)
-        }
-        fos?.use {
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
         }
     }
-
-     */
 
 }

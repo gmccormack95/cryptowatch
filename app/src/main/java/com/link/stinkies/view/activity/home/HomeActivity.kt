@@ -12,6 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.link.stinkies.layout.activity.home.HomeActivityLayout
 import com.link.stinkies.layout.activity.home.bottomsheet.BottomSheet
+import com.link.stinkies.model.ImageDownloadManager
 import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.model.coincap.CoinCapRepo
@@ -39,10 +40,17 @@ class HomeActivity : ComponentActivity() {
                 dynamicColor = false
             ) {
                 if (viewModel.bottomsheetVM.showSheet.value) {
-                    BottomSheet {
-                        viewModel.bottomsheetVM.showSheet.value = false
-                    }
+                    BottomSheet(
+                        viewModel = viewModel,
+                        onDownload = { post ->
+                            ImageDownloadManager.get(this, post)
+                        },
+                        onDismiss = {
+                            viewModel.bottomsheetVM.showSheet.value = false
+                        }
+                    )
                 }
+
                 HomeActivityLayout(viewModel)
             }
         }

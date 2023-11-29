@@ -48,6 +48,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.google.android.material.textview.MaterialTextView
 import com.link.stinkies.model.biz.Post
+import com.link.stinkies.ui.theme.linkBlue
 import com.link.stinkies.ui.theme.white
 import com.link.stinkies.view.PostReplySpan
 import com.link.stinkies.view.PostReplyMovementMethod
@@ -126,7 +127,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
                     .padding(end = 16.dp)
             )
             IconButton(
-                onClick = { viewModel.bottomsheetVM.open(post?.id) },
+                onClick = { viewModel.bottomsheetVM.open(post) },
                 modifier = Modifier
                     .size(20.dp)
             ) {
@@ -160,7 +161,7 @@ fun PostBody(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?) {
                     autoLinkMask = Linkify.WEB_URLS
                     linksClickable = true
                     setTextColor(Color.DarkGray.toArgb())
-                    setLinkTextColor(Color.Blue.toArgb())
+                    setLinkTextColor(linkBlue.toArgb())
                     movementMethod = PostReplyMovementMethod { postId ->
                         scope.launch {
                             drawerState.open()
@@ -220,7 +221,6 @@ private fun PostFooter(viewModel: HomeActivityVM, drawerState: DrawerState, post
             post?.now ?: "",
             fontSize = 12.sp,
             color = Color.DarkGray,
-            fontWeight = FontWeight.Light,
         )
     }
 }
