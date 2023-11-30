@@ -2,9 +2,14 @@
 
 package com.link.stinkies.layout.settings
 
+import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.text.util.Linkify
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ImageView
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
@@ -59,6 +64,8 @@ fun SettingsLayout(viewModel: HomeActivityVM) {
         modifier = Modifier
             .fillMaxSize()
     ) {
+        WebviewScreen()
+        /*
         Box(
             modifier = Modifier
                 .padding(8.dp)
@@ -91,6 +98,38 @@ fun SettingsLayout(viewModel: HomeActivityVM) {
                     .height(250.dp)
             )
         }
+
+         */
+    }
+}
+
+@Composable
+fun WebviewScreen(){
+    var backEnable by remember { mutableStateOf(false) }
+    var webView : WebView? = null
+
+    AndroidView(
+        modifier = Modifier,
+        factory = { context ->
+            WebView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                )
+                webViewClient = object : WebViewClient(){
+                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                        backEnable = view!!.canGoBack()
+                    }
+                }
+                settings.javaScriptEnabled = true
+                loadUrl("https://staking.chain.link/")
+                webView = this
+            }
+        }, update = {
+            webView = it
+        })
+    BackHandler(enabled = backEnable) {
+        webView?.goBack()
     }
 }
 

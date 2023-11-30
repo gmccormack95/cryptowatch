@@ -79,6 +79,8 @@ dependencies {
     implementation("androidx.compose.animation:animation-graphics:1.3.3")
     implementation("io.coil-kt:coil-compose:2.5.0")
 
+    implementation("androidx.browser:browser:1.5.0")
+
     implementation("com.patrykandpatrick.vico:compose:1.12.0")
     implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
     implementation("com.patrykandpatrick.vico:core:1.12.0")

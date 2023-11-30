@@ -4,9 +4,11 @@ package com.link.stinkies.layout.charts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -168,6 +170,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(bottom = 32.dp)
         ) {
@@ -192,6 +195,11 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     modifier = Modifier
                 )
             }
+            Spacer(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
             Column {
                 Text(
                     text = "Circulating Supply",
@@ -213,6 +221,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
         }
         Row (
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(bottom = 32.dp)
         ){
@@ -237,6 +246,11 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     modifier = Modifier
                 )
             }
+            Spacer(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
             Column {
                 Text(
                     text = "Max Supply",

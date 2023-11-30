@@ -72,7 +72,7 @@ val items = listOf(
         route = Screen.Biz.name
     ),
     BottomNavigationItem(
-        title = "Settings",
+        title = "Staking",
         selectedIcon = Icons.Filled.Settings,
         unselectedIcon = Icons.Outlined.Settings,
         route = Screen.Settings.name
