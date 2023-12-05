@@ -35,7 +35,7 @@ public class PostReplySpan extends ClickableSpan {
                 try{
                     CharSequence idCheck = text.subSequence(start + 2, end);
                     postId = Integer.parseInt(idCheck.toString());
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     return;
                 }
             }

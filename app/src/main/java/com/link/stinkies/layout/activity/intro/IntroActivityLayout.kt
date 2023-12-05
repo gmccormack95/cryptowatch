@@ -35,60 +35,10 @@ import com.link.stinkies.ui.theme.linkBlue
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun IntroActivityLayout(splashAnimation: Drawable?) {
+fun IntroActivityLayout() {
     StinkiesTheme(
         dynamicColor = false
     ) {
-        Scaffold() { paddingValues ->
-            Surface {
-                Box(modifier = Modifier){
-                    AndroidView(
-                        modifier = Modifier,
-                        factory = {
-                            ImageView(it)
-                        },
-                        update = {
-                            it.background = splashAnimation
-                            val splashAnim = it.background as? AnimationDrawable
-                            if (splashAnim?.isRunning == false) {
-                                splashAnim.start()
-                            }
-                        }
-                    )
-                    Box(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .drawWithContent {
-                                drawContent()
-                                drawPath(
-                                    path = drawCustomHexagonPath(size),
-                                    color = linkBlue,
-                                    style = Stroke(
-                                        width = 8.dp.toPx(),
-                                        pathEffect = PathEffect.cornerPathEffect(16f)
-                                    )
-                                )
-                            }
-                            .wrapContentSize()
-                            .align(Alignment.Center)
-                    ){
-                        Image(
-                            painter = painterResource(id = R.drawable.no_no_linkers_splash),
-                            contentDescription = "No No Linkers",
-                            contentScale = ContentScale.FillHeight,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .graphicsLayer {
-                                    shadowElevation = 8.dp.toPx()
-                                    shape = HexagonShape()
-                                    clip = true
-                                }
-                                .height(250.dp)
 
-                        )
-                    }
-                }
-            }
-        }
     }
 }

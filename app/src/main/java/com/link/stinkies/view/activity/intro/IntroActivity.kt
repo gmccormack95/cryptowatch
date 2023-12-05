@@ -31,7 +31,7 @@ class IntroActivity : ComponentActivity() {
 
         setContent {
             StinkiesTheme {
-                IntroActivityLayout(ContextCompat.getDrawable(this, R.drawable.splash_sequence))
+                IntroActivityLayout()
             }
         }
 
