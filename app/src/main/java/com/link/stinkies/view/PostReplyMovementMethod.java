@@ -17,7 +17,6 @@ public class PostReplyMovementMethod extends LinkMovementMethod {
     public boolean onTouchEvent(TextView widget, android.text.Spannable buffer, android.view.MotionEvent event) {
         int action = event.getAction();
 
-        //http://stackoverflow.com/questions/1697084/handle-textview-link-click-in-my-android-app
         if (action == MotionEvent.ACTION_UP) {
             int x = (int) event.getX();
             int y = (int) event.getY();
@@ -34,12 +33,10 @@ public class PostReplyMovementMethod extends LinkMovementMethod {
 
             PostReplySpan[] objectSpans = buffer.getSpans(off, off, PostReplySpan.class);
             if (objectSpans.length != 0) {
-                int start = buffer.toString().indexOf(">>") + 2;
-                int end = start + 8;
-                String postId = buffer.toString().substring(start, end);
+                int postId = objectSpans[0].getPostId();
 
                 try {
-                    boolean handled = mOnLinkClickedListener.onLinkClicked(Integer.parseInt(postId));
+                    boolean handled = mOnLinkClickedListener.onLinkClicked(postId);
                     if (handled) {
                         return true;
                     }

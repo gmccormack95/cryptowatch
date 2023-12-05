@@ -2,60 +2,59 @@ package com.link.stinkies.view;
 
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.text.style.SuperscriptSpan;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class PostReplySpan extends ClickableSpan {
 
-    private boolean withUnderline;
-
-    private static int postId = -1;
+    private int postId = -1;
 
     public static void span(TextView view) {
-        span(view, true);
-    }
-
-    public static void span(TextView view, boolean withUnderline) {
+        int postId = -1;
+        SpannableStringBuilder sb = new SpannableStringBuilder(view.getText());
         CharSequence text = view.getText();
 
         while (true) {
             String string = text.toString();
-            PostReplySpan span = new PostReplySpan(withUnderline);
             int start = string.indexOf(">>");
             int end = start + 10;
 
             if (start == -1) {
-                return;
+                break;
             } else {
                 try{
                     CharSequence idCheck = text.subSequence(start + 2, end);
                     postId = Integer.parseInt(idCheck.toString());
                 } catch (Exception e) {
-                    return;
+                    break;
                 }
             }
 
-            if (text instanceof Spannable) {
-                ((Spannable) text).setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else {
-                SpannableString s = SpannableString.valueOf(text);
-                s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                view.setText(s);
-            }
+            PostReplySpan span = new PostReplySpan(postId);
 
-            if(text.length() - 1 <= end) return;
+            int idPosition = view.getText().toString().indexOf(">>" + postId);
+            sb.setSpan(span, idPosition, idPosition + 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            if(text.length() - 1 <= end) break;
 
             text = text.subSequence(end, text.length() - 1);
         }
+
+        view.setText(sb);
     }
 
-    public PostReplySpan(boolean withUnderline) {
-        this.withUnderline = withUnderline;
+    public PostReplySpan(int postId) {
+        this.postId = postId;
     }
 
     @Override
@@ -64,7 +63,7 @@ public class PostReplySpan extends ClickableSpan {
     @Override
     public void updateDrawState(TextPaint paint) {
         super.updateDrawState(paint);
-        paint.setUnderlineText(withUnderline);
+        paint.setUnderlineText(true);
     }
 
     public int getPostId() {
