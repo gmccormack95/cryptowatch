@@ -64,8 +64,6 @@ fun SettingsLayout(viewModel: HomeActivityVM) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        WebviewScreen()
-        /*
         Box(
             modifier = Modifier
                 .padding(8.dp)
@@ -73,18 +71,18 @@ fun SettingsLayout(viewModel: HomeActivityVM) {
                     drawContent()
                     drawPath(
                         path = drawCustomHexagonPath(size),
-                        color = linkBlue,
+                        color = Color.White,
                         style = Stroke(
-                            width = 8.dp.toPx(),
-                            pathEffect = PathEffect.cornerPathEffect(16f)
+                            width = 16.dp.toPx(),
+                            pathEffect = PathEffect.cornerPathEffect(0f)
                         )
                     )
                 }
                 .wrapContentSize()
                 .align(Alignment.TopCenter)
-        ){
+        ) {
             Image(
-                painter = painterResource(id = R.drawable.no_no_linkers),
+                painter = painterResource(id = R.drawable.spilt_stinkies),
                 contentDescription = "No No Linkers",
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier
@@ -98,8 +96,6 @@ fun SettingsLayout(viewModel: HomeActivityVM) {
                     .height(250.dp)
             )
         }
-
-         */
     }
 }
 

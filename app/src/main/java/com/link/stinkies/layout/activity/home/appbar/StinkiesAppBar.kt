@@ -39,11 +39,9 @@ fun StinkiesAppBar(
         title = {
             val title = if (currentScreen.base) {
                 stringResource(R.string.app_bar_title)
-            } else if (currentScreen == Screen.Thread) {
-                stringResource(R.string.app_bar_view_post)
             } else {
-                ""
-            }
+                stringResource(R.string.app_bar_view_post)
+            } 
 
             Row(
                 verticalAlignment = Alignment.CenterVertically

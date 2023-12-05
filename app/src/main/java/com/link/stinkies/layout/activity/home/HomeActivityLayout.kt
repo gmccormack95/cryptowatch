@@ -124,7 +124,7 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                 ) {
                     items.forEach { item ->
                         NavigationBarItem(
-                            selected = currentDestination?.hierarchy?.any { it.route == item.route} == true,
+                            selected = currentDestination?.hierarchy?.any { it.route == item.route || (it.route == Screen.Thread.route && item.route == Screen.Biz.route)} == true,
                             onClick = {
                                 navController.navigate(item.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
@@ -139,7 +139,7 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                             alwaysShowLabel = false,
                             icon = {
                                 Icon(
-                                    imageVector = if (currentDestination?.hierarchy?.any { it.route == item.route} == true) {
+                                    imageVector = if (currentDestination?.hierarchy?.any { it.route == item.route || (it.route == Screen.Thread.route && item.route == Screen.Biz.route)} == true) {
                                         item.selectedIcon
                                     } else item.unselectedIcon,
                                     contentDescription = item.title
