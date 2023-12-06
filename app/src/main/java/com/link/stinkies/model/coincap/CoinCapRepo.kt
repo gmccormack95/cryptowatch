@@ -87,8 +87,19 @@ object CoinCapRepo {
             }
         )
 
+        val top10 = JsonObjectRequest(
+            Request.Method.GET, Api.top10, null, { response ->
+                Log.d("BizRepo", "Response: %s".format(response.toString()))
+                top10.value = Gson().fromJson(response.toString(), TokenTop10::class.java)
+                top10.value?.getChartData()
+            }, { error ->
+                Log.d("BizRepo", "Error: %s".format(error.toString()))
+            }
+        )
+
         volleyManager?.addToRequestQueue(marketHistory)
         volleyManager?.addToRequestQueue(chainlinkCurrent)
+        volleyManager?.addToRequestQueue(top10)
     }
 
     fun loaded(): Boolean {
