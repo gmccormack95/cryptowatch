@@ -67,6 +67,7 @@ fun RepliesDrawer(viewModel: HomeActivityVM, drawerState: DrawerState, content: 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         ModalDrawer(
             drawerState = drawerState,
+            gesturesEnabled = drawerState.isOpen,
             drawerContent = {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     // under the hood, drawerContent is wrapped in a Column, but it would be under the Rtl layout
