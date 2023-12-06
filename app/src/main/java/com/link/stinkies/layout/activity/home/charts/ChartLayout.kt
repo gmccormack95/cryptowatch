@@ -3,7 +3,6 @@
 package com.link.stinkies.layout.charts
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -35,25 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.link.stinkies.layout.activity.home.charts.performance.AssetPerformanceCard
 import com.link.stinkies.layout.activity.home.charts.vico.LinkChart
-import com.link.stinkies.layout.activity.home.charts.vico.rememberMarker
 import com.link.stinkies.ui.theme.background
 import com.link.stinkies.ui.theme.financeGreen
 import com.link.stinkies.ui.theme.financeRed
 import com.link.stinkies.ui.theme.linkBlue
-import com.link.stinkies.viewmodel.activity.HomeActivityVM
-import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.compose.chart.line.lineSpec
-import com.patrykandpatrick.vico.compose.component.shape.shader.verticalGradient
-import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
-import com.link.stinkies.ui.theme.white
 import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
-import com.patrykandpatrick.vico.core.entry.ChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.ChartModelProducer
-import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
 fun ChartLayout(viewModel: ChartLayoutVM) {
@@ -95,7 +79,7 @@ fun ChartLayout(viewModel: ChartLayoutVM) {
 
 @Composable
 private fun Header(viewModel: ChartLayoutVM) {
-    val chartData = viewModel.chartData.observeAsState()
+    val chartData = viewModel.chainlinkData.observeAsState()
     val chainlink = viewModel.chainlink.observeAsState()
     val interval = viewModel.interval.observeAsState()
 

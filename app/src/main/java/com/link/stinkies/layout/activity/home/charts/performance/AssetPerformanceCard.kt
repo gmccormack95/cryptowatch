@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,6 +62,7 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 fun AssetPerformanceCard(
     token: TokenStats
 ) {
+    val chartData = token.chartData.observeAsState()
     Card(
         modifier = Modifier
             .wrapContentHeight()
@@ -87,7 +89,7 @@ fun AssetPerformanceCard(
 
             TickerName(token.name ?: "", token.symbol ?: "")
 
-            token.chartData.value?.let { PerformanceChart(it) }
+            PerformanceChart(chartData.value)
 
             ValueView(token.priceUsd ?: 0F)
         }
@@ -112,9 +114,9 @@ fun ValueView(currentValue: Float) {
 }
 
 @Composable
-fun PerformanceChart(chartData: TokenHistory) {
-    val list = chartData.getPrices()
-    val zipList: List<Pair<Float, Float>> = list.zipWithNext()
+fun PerformanceChart(chartData: TokenHistory?) {
+    val list = chartData?.getPrices() ?: return
+    val zipList= list.zipWithNext()
 
     Row(
         modifier = Modifier

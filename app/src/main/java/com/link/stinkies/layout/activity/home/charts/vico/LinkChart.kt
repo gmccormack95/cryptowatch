@@ -1,5 +1,6 @@
 package com.link.stinkies.layout.activity.home.charts.vico
 
+import android.graphics.Typeface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +31,10 @@ import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.line.lineSpec
 import com.patrykandpatrick.vico.compose.component.shape.shader.verticalGradient
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.component.textComponent
+import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
+import com.patrykandpatrick.vico.core.chart.decoration.ThresholdLine
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
@@ -42,7 +48,9 @@ enum class Interval(var label: String, var topLabel: String, var coinCapValue: S
 
 @Composable
 fun LinkChart(viewModel: ChartLayoutVM) {
-    val chartData = viewModel.chartData.observeAsState()
+    val chartData = viewModel.chainlinkData.observeAsState()
+    val difference = (viewModel.chainlinkData.value?.high ?: 0f) - (viewModel.chainlinkData.value?.low ?: 0f)
+    val padding = difference / 5f
 
     Column(
         modifier = Modifier
@@ -52,8 +60,8 @@ fun LinkChart(viewModel: ChartLayoutVM) {
         Chart(
             chart = lineChart(
                 axisValuesOverrider = AxisValuesOverrider.fixed(
-                    minY = (chartData.value?.low ?: 0.5f) - 0.5f,
-                    maxY = (chartData.value?.high ?: -0.5f) + 0.5f,
+                    minY = (chartData.value?.low ?: padding) - padding,
+                    maxY = (chartData.value?.high ?: -padding) + padding,
                 ),
                 lines = listOf(
                     lineSpec(
@@ -67,7 +75,8 @@ fun LinkChart(viewModel: ChartLayoutVM) {
                         ),
                     ),
                 ),
-                spacing = 0.2.dp
+                spacing = 0.2.dp,
+                decorations = listOf(rememberTopThresholdLine(chartData.value?.high), rememberBottomThresholdLine(chartData.value?.low)),
             ),
             chartModelProducer = chartData.value?.chartEntryModelProducer ?:
             ChartEntryModelProducer(arrayListOf<ChartEntry>()),
@@ -115,6 +124,50 @@ fun LinkChart(viewModel: ChartLayoutVM) {
 }
 
 @Composable
+private fun rememberTopThresholdLine(high: Float?): ThresholdLine {
+    val line = shapeComponent(color = Color.Transparent)
+    val label = textComponent(
+        color = Color.White,
+        typeface = Typeface.MONOSPACE,
+        padding = dimensionsOf(
+            end = 16.dp,
+            bottom = 16.dp
+        )
+    )
+    return remember(line, label, high) {
+        ThresholdLine(
+            thresholdValue = high ?: 0f,
+            lineComponent = line,
+            labelComponent = label,
+            labelHorizontalPosition = ThresholdLine.LabelHorizontalPosition.End,
+            labelVerticalPosition = ThresholdLine.LabelVerticalPosition.Top
+        )
+    }
+}
+
+@Composable
+private fun rememberBottomThresholdLine(low: Float?): ThresholdLine {
+    val line = shapeComponent(color = Color.Transparent)
+    val label = textComponent(
+        color = Color.White,
+        typeface = Typeface.MONOSPACE,
+        padding = dimensionsOf(
+            start = 16.dp,
+            top = 16.dp
+        )
+    )
+    return remember(line, label, low) {
+        ThresholdLine(
+            thresholdValue = low ?: 0f,
+            lineComponent = line,
+            labelComponent = label,
+            labelHorizontalPosition = ThresholdLine.LabelHorizontalPosition.Start,
+            labelVerticalPosition = ThresholdLine.LabelVerticalPosition.Bottom
+        )
+    }
+}
+
+@Composable
 private fun Day(interval: Interval, viewModel: ChartLayoutVM) {
     val selectedInterval = viewModel.interval.observeAsState()
 
@@ -122,10 +175,10 @@ private fun Day(interval: Interval, viewModel: ChartLayoutVM) {
         modifier = Modifier
             .padding(12.dp)
             .background(
-                color = if(selectedInterval.value == interval)
-                        Color.White.copy(alpha = 0.4f)
-                    else
-                        Color.Transparent,
+                color = if (selectedInterval.value == interval)
+                    Color.White.copy(alpha = 0.4f)
+                else
+                    Color.Transparent,
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable(
@@ -143,4 +196,8 @@ private fun Day(interval: Interval, viewModel: ChartLayoutVM) {
                 .padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
         )
     }
+}
+
+private fun calculateChartPadding() {
+
 }

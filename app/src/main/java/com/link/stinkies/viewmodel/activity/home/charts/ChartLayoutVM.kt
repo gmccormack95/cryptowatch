@@ -11,7 +11,7 @@ import com.link.stinkies.model.coincap.TokenTop10
 class ChartLayoutVM : ViewModel() {
 
     var loading: MutableLiveData<Boolean> = MutableLiveData(false)
-    var chartData: MutableLiveData<TokenHistory> = MutableLiveData()
+    var chainlinkData: MutableLiveData<TokenHistory> = MutableLiveData()
     var chainlink: MutableLiveData<TokenStats> = MutableLiveData()
     var top10: MutableLiveData<TokenTop10> = MutableLiveData()
     var interval: MutableLiveData<Interval> = MutableLiveData()
@@ -20,7 +20,7 @@ class ChartLayoutVM : ViewModel() {
 
     fun init(coinCapRepo: CoinCapRepo) {
         this.coinCapRepo = coinCapRepo
-        chartData = coinCapRepo.chartData
+        chainlinkData = coinCapRepo.chainlinkData
         chainlink = coinCapRepo.chainlink
         top10 = coinCapRepo.top10
         interval = coinCapRepo.interval

@@ -16,7 +16,7 @@ import com.link.stinkies.model.volley.VolleyManager
 object CoinCapRepo {
 
     var interval: MutableLiveData<Interval> = MutableLiveData(Interval.Day1)
-    var chartData: MutableLiveData<TokenHistory> = MutableLiveData()
+    var chainlinkData: MutableLiveData<TokenHistory> = MutableLiveData()
     var chainlink: MutableLiveData<TokenStats> = MutableLiveData()
     var top10: MutableLiveData<TokenTop10> = MutableLiveData()
     var volleyManager: VolleyManager? = null
@@ -55,8 +55,8 @@ object CoinCapRepo {
         val marketHistory = JsonObjectRequest(
             Request.Method.GET, Api.getChainlinkHistory(interval.value), null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
-                chartData.value = Gson().fromJson(response.toString(), TokenHistory::class.java)
-                chartData.value?.updateModel()
+                chainlinkData.value = Gson().fromJson(response.toString(), TokenHistory::class.java)
+                chainlinkData.value?.updateModel()
                 marketHistoryResponded = true
                 if (marketHistoryResponded && chainlinkStatsResponded) {
                     onComplete()
@@ -92,7 +92,7 @@ object CoinCapRepo {
     }
 
     fun loaded(): Boolean {
-        return chartData.value != null && chainlink.value != null && top10.value?.loaded() == true
+        return chainlinkData.value != null && chainlink.value != null && top10.value?.loaded() == true
     }
 
 }

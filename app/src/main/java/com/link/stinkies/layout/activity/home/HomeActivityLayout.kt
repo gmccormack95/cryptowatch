@@ -48,6 +48,7 @@ import com.link.stinkies.layout.appbar.StinkiesAppBar
 import com.link.stinkies.layout.catalog.CatalogLayout
 import com.link.stinkies.layout.charts.ChartLayout
 import com.link.stinkies.layout.settings.SettingsLayout
+import com.link.stinkies.model.StartUp
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import kotlinx.coroutines.launch
 
