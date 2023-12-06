@@ -65,8 +65,6 @@ class TokenHistory {
 
     val chartEntryModelProducer = ChartEntryModelProducer()
 
-
-
     fun updateModel() {
         val prices = arrayListOf<ChartEntry>()
 

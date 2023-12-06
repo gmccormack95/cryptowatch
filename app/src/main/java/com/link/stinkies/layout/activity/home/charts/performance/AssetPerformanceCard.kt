@@ -28,7 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +47,8 @@ import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.model.coincap.PricePoint
 import com.link.stinkies.model.coincap.TokenHistory
 import com.link.stinkies.model.coincap.TokenStats
+import com.link.stinkies.ui.theme.BezierCurve
+import com.link.stinkies.ui.theme.BezierCurveStyle
 import com.link.stinkies.ui.theme.financeGreen
 import com.link.stinkies.ui.theme.financeRed
 import com.link.stinkies.ui.theme.white
@@ -125,12 +129,22 @@ fun PerformanceChart(chartData: TokenHistory?) {
     ) {
         val max = list.max()
         val min = list.min()
+        val lineColor = if (list.last() > list.first()) financeGreen else financeRed
 
-        val lineColor =
-            if (list.last() > list.first()) financeGreen else financeRed
-
+        BezierCurve(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f),
+            points = list,
+            minPoint = min,
+            maxPoint = max,
+            style = BezierCurveStyle.CurveStroke(
+                brush = Brush.linearGradient(listOf(lineColor, lineColor)),
+                stroke = Stroke(width = 6f)
+            ),
+        )
+        /*
         for (pair in zipList) {
-
             val fromValuePercentage = getValuePercentageForRange(pair.first, max, min)
             val toValuePercentage = getValuePercentageForRange(pair.second, max, min)
 
@@ -151,6 +165,8 @@ fun PerformanceChart(chartData: TokenHistory?) {
                     )
                 })
         }
+
+         */
     }
 }
 
