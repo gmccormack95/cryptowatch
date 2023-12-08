@@ -140,6 +140,7 @@ private fun Header(viewModel: ChartLayoutVM) {
 @Composable
 private fun LinkStats(viewModel: ChartLayoutVM) {
     val chainlink = viewModel.chainlink.observeAsState()
+    val volumeMarketCap = (chainlink.value?.volumeUsd24Hr ?: 1f)/(chainlink.value?.maxSupply ?: 1f)
 
     Column (
         modifier = Modifier
@@ -265,7 +266,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                 modifier = Modifier
             )
             Text(
-                text = "18.37%",
+                text = "${volumeMarketCap * 100}%",
                 color = Color.White,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.W500,

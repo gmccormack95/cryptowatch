@@ -78,6 +78,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.compose.animation:animation-graphics:1.3.3")
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("com.coinbase:coinbase-wallet-sdk:1.0.3")
 
     implementation("androidx.browser:browser:1.5.0")
 

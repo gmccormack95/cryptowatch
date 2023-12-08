@@ -3,16 +3,13 @@
 package com.link.stinkies.layout.activity.home.thread.post
 
 import android.text.util.Linkify
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,31 +24,26 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
-import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import com.google.android.material.textview.MaterialTextView
 import com.link.stinkies.model.biz.Post
 import com.link.stinkies.ui.theme.linkBlue
 import com.link.stinkies.ui.theme.white
-import com.link.stinkies.view.PostReplySpan
-import com.link.stinkies.view.PostReplyMovementMethod
+import com.link.stinkies.ui.utils.PostReplySpan
+import com.link.stinkies.ui.utils.PostReplyMovementMethod
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -165,13 +157,14 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?, drawerState: DrawerState, s
                     linksClickable = true
                     setTextColor(Color.DarkGray.toArgb())
                     setLinkTextColor(linkBlue.toArgb())
-                    movementMethod = PostReplyMovementMethod { postId ->
-                        scope.launch {
-                            drawerState.open()
+                    movementMethod =
+                        PostReplyMovementMethod { postId ->
+                            scope.launch {
+                                drawerState.open()
+                            }
+                            viewModel.openReplies(postId)
+                            true
                         }
-                        viewModel.openReplies(postId)
-                        true
-                    }
                 }
             },
             update = { textView ->
