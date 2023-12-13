@@ -102,7 +102,6 @@ fun LinkChart(viewModel: ChartLayoutVM) {
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
         ) {
             Day(
                 interval = Interval.Day1,
@@ -197,8 +196,4 @@ private fun Day(interval: Interval, viewModel: ChartLayoutVM) {
                 .padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
         )
     }
-}
-
-private fun calculateChartPadding() {
-
 }

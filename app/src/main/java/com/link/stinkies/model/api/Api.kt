@@ -22,6 +22,8 @@ object Api {
 
     const val icon = "https://coinicons-api.vercel.app/api/icon/"
 
+    const val blogfeed = "https://blog.chain.link/feed/"
+
     fun getChainlinkHistory(interval: Interval?): String {
         interval?.let {
             val end = System.currentTimeMillis()

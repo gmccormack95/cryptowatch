@@ -28,9 +28,7 @@ class HomeActivityVM : ViewModel() {
 
     private var bizRepo: BizRepo? = null
 
-    fun init(context: Context, bizRepo: BizRepo, coinCapRepo: CoinCapRepo) {
-        StartUp.init(context, BizRepo, CoinCapRepo)
-
+    fun init(bizRepo: BizRepo, coinCapRepo: CoinCapRepo) {
         this.bizRepo = bizRepo
         this.chartLayoutVM.init(coinCapRepo)
         this.threadLayoutVM.init(BizRepo)

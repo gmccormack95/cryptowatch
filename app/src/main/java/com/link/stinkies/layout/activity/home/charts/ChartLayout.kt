@@ -185,7 +185,9 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     .weight(1f)
                     .fillMaxWidth()
             )
-            Column {
+            Column (
+                horizontalAlignment = Alignment.End
+            ) {
                 Text(
                     text = "Circulating Supply",
                     color = Color.White.copy(alpha = .4f),
@@ -236,7 +238,9 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     .weight(1f)
                     .fillMaxWidth()
             )
-            Column {
+            Column (
+                horizontalAlignment = Alignment.End
+            ) {
                 Text(
                     text = "Max Supply",
                     color = Color.White.copy(alpha = .4f),
