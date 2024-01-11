@@ -1,12 +1,9 @@
 package com.link.stinkies.viewmodel.activity.home.thread
 
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.link.stinkies.model.biz.BizRepo
-import com.link.stinkies.model.biz.Post
-import com.link.stinkies.model.biz.ThreadResponse
+import com.link.stinkies.model.biz.PostThread
 import com.link.stinkies.viewmodel.activity.home.replies.RepliesDrawerVM
 
 class ThreadLayoutVM : ViewModel() {
@@ -14,7 +11,7 @@ class ThreadLayoutVM : ViewModel() {
     val repliesDrawerVM = RepliesDrawerVM()
 
     var loading: MutableLiveData<Boolean> = MutableLiveData(false)
-    var thread: MutableLiveData<ThreadResponse> = MutableLiveData()
+    var thread: MutableLiveData<PostThread> = MutableLiveData()
 
     private var bizRepo: BizRepo? = null
 

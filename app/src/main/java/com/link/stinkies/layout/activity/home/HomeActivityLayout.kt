@@ -99,7 +99,6 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
     } ?: Screen.Home
     val currentDestination = backStackEntry?.destination
 
-
     RepliesDrawer (
         viewModel = viewModel,
         drawerState = drawerState
@@ -202,7 +201,11 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                     }
                 ) { navBackStackEntry ->
                     val threadId = navBackStackEntry.arguments?.getInt("threadId") ?: -1
-                    ThreadLayout(viewModel, threadId, drawerState)
+                    ThreadLayout(
+                        viewModel = viewModel,
+                        threadId = threadId,
+                        drawerState = drawerState
+                    )
                 }
             }
         }

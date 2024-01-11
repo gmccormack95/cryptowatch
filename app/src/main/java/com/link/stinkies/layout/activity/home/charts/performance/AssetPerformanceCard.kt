@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -96,7 +97,6 @@ fun ValueView(currentValue: Float) {
 @Composable
 fun PerformanceChart(chartData: TokenHistory?) {
     val list = chartData?.getPrices() ?: return
-    val zipList= list.zipWithNext()
 
     Row(
         modifier = Modifier
@@ -119,35 +119,8 @@ fun PerformanceChart(chartData: TokenHistory?) {
                 stroke = Stroke(width = 6f)
             ),
         )
-        /*
-        for (pair in zipList) {
-            val fromValuePercentage = getValuePercentageForRange(pair.first, max, min)
-            val toValuePercentage = getValuePercentageForRange(pair.second, max, min)
-
-            Canvas(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-                onDraw = {
-                    val fromPoint = Offset(x = 0f, y = size.height.times(1 - fromValuePercentage))
-                    val toPoint =
-                        Offset(x = size.width, y = size.height.times(1 - toValuePercentage))
-
-                    drawLine(
-                        color = lineColor,
-                        start = fromPoint,
-                        end = toPoint,
-                        strokeWidth = 4f
-                    )
-                })
-        }
-
-         */
     }
 }
-
-private fun getValuePercentageForRange(value: Float, max: Float, min: Float) =
-    (value - min) / (max - min)
 
 @Composable
 //@Preview

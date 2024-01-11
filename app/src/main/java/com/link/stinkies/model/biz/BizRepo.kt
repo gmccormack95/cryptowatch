@@ -17,7 +17,7 @@ import com.link.stinkies.model.volley.VolleyManager
 object BizRepo {
 
     var catalog: MutableLiveData<Catalog> = MutableLiveData()
-    var thread: MutableLiveData<ThreadResponse> = MutableLiveData()
+    var thread: MutableLiveData<PostThread> = MutableLiveData()
     var volleyManager: VolleyManager? = null
 
     fun init(context: Context) {
@@ -57,7 +57,7 @@ object BizRepo {
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, Api.bizThread.replace(Constant.THREAD_ID, threadId?.toString() ?: ""), null, { response ->
                 Log.d("BizRepo", "Response: %s".format(response.toString()))
-                thread.value = Gson().fromJson(response.toString(), ThreadResponse::class.java)
+                thread.value = Gson().fromJson(response.toString(), PostThread::class.java)
                 thread.value?.threadId = threadId
                 onComplete()
             }, { error ->

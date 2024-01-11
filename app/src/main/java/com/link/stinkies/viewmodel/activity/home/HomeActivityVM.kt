@@ -1,21 +1,13 @@
 package com.link.stinkies.viewmodel.activity
 
-import android.content.Context
-import androidx.compose.material.DrawerState
-import androidx.compose.material.DrawerValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.model.biz.Catalog
-import com.link.stinkies.model.biz.ThreadResponse
 import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
 import com.link.stinkies.viewmodel.activity.home.bottomsheet.BottomSheetVM
 import com.link.stinkies.viewmodel.activity.home.thread.ThreadLayoutVM
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class HomeActivityVM : ViewModel() {
 

@@ -1,6 +1,6 @@
 package com.link.stinkies.model.biz
 
-class ThreadResponse {
+class PostThread {
 
     var threadId: Int? = null
 
