@@ -64,6 +64,8 @@ import com.bumptech.glide.integration.compose.GlideSubcomposition
 import com.bumptech.glide.integration.compose.RequestBuilderTransform
 import com.bumptech.glide.integration.compose.RequestState
 import com.link.stinkies.layout.activity.home.Screen
+import com.link.stinkies.layout.activity.home.simpleGridVerticalScrollbar
+import com.link.stinkies.layout.activity.home.simpleVerticalScrollbar
 import com.link.stinkies.ui.theme.background
 import com.link.stinkies.ui.theme.white
 
@@ -87,14 +89,11 @@ fun CatalogLayout(viewModel: HomeActivityVM, navController: NavController, gridS
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
             verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy((-4).dp),
             state = gridState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp
-                ),
+                .simpleGridVerticalScrollbar(gridState),
             content = {
                 items(catalog.value?.threads?.count() ?: 0) { index ->
                     Thread(
@@ -121,6 +120,7 @@ private fun Thread(viewModel: HomeActivityVM, thread: ThreadItem?, navController
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
+            .padding(start = 8.dp, end = 8.dp)
             .clickable {
                 navController.navigate("${Screen.Thread.name}/${thread?.id}")
                 viewModel.refreshThread(thread?.id ?: -1)

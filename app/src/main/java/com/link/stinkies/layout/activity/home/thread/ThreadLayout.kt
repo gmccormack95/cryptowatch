@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.link.stinkies.layout.activity.home.simpleVerticalScrollbar
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import com.link.stinkies.layout.activity.home.thread.post.Post
 import com.link.stinkies.ui.theme.background
@@ -59,10 +61,6 @@ fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int, drawerState: DrawerSt
         modifier = Modifier
             .fillMaxSize()
             .background(background)
-            .padding(
-                start = 8.dp,
-                end = 8.dp,
-            )
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
@@ -74,14 +72,23 @@ fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int, drawerState: DrawerSt
                         post = thread.value?.posts?.get(index),
                         drawerState = drawerState,
                         modifier = if(index == (thread.value?.posts?.size?.minus(1)))
-                            Modifier.padding(bottom = 8.dp)
+                            Modifier.padding(
+                                bottom = 8.dp,
+                                start = 8.dp,
+                                end = 8.dp
+                            )
                         else
                             Modifier
+                                .padding(
+                                    start = 8.dp,
+                                    end = 8.dp
+                                )
                     )
                 }
             },
             modifier = Modifier
                 .fillMaxHeight()
+                .simpleVerticalScrollbar(state = listState)
         )
         PullRefreshIndicator(
             isRefreshing.value == true,
