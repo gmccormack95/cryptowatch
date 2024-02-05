@@ -137,6 +137,7 @@ private fun rememberTopThresholdLine(high: Float?): ThresholdLine {
     return remember(line, label, high) {
         ThresholdLine(
             thresholdValue = high ?: 0f,
+            thresholdLabel = String.format("%.2f", high),
             lineComponent = line,
             labelComponent = label,
             labelHorizontalPosition = ThresholdLine.LabelHorizontalPosition.End,
@@ -159,6 +160,7 @@ private fun rememberBottomThresholdLine(low: Float?): ThresholdLine {
     return remember(line, label, low) {
         ThresholdLine(
             thresholdValue = low ?: 0f,
+            thresholdLabel = String.format("%.2f", low),
             lineComponent = line,
             labelComponent = label,
             labelHorizontalPosition = ThresholdLine.LabelHorizontalPosition.Start,
