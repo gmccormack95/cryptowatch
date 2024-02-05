@@ -33,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -42,6 +43,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.link.stinkies.R
 import com.link.stinkies.layout.activity.home.drawer.RepliesDrawer
 import com.link.stinkies.layout.activity.home.thread.ThreadLayout
 import com.link.stinkies.layout.appbar.StinkiesAppBar
@@ -57,27 +59,6 @@ data class BottomNavigationItem(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val route: String
-)
-
-val items = listOf(
-    BottomNavigationItem(
-        title = "Home",
-        selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Outlined.Home,
-        route = Screen.Home.name
-    ),
-    BottomNavigationItem(
-        title = "Biz",
-        selectedIcon = Icons.Filled.AccountCircle,
-        unselectedIcon = Icons.Outlined.AccountCircle,
-        route = Screen.Biz.name
-    ),
-    BottomNavigationItem(
-        title = "Staking",
-        selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings,
-        route = Screen.Settings.name
-    ),
 )
 
 enum class Screen(val base: Boolean = false, val route: String) {
@@ -98,6 +79,27 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
         backStackEntry?.destination?.route?.contains(it.name) == true
     } ?: Screen.Home
     val currentDestination = backStackEntry?.destination
+
+    val items = listOf(
+        BottomNavigationItem(
+            title = "Home",
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home,
+            route = Screen.Home.name
+        ),
+        BottomNavigationItem(
+            title = "Biz",
+            selectedIcon = ImageVector.vectorResource(R.drawable.biz_filled),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.biz_unfilled),
+            route = Screen.Biz.name
+        ),
+        BottomNavigationItem(
+            title = "Staking",
+            selectedIcon = Icons.Filled.Settings,
+            unselectedIcon = Icons.Outlined.Settings,
+            route = Screen.Settings.name
+        ),
+    )
 
     RepliesDrawer (
         viewModel = viewModel,
