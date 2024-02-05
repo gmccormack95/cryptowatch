@@ -172,7 +172,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "$${chainlink.value?.marketCapUsd?.toInt()}",
+                    text = "$${"%,d".format(chainlink.value?.marketCapUsd?.toInt())}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
@@ -197,7 +197,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "${chainlink.value?.supply?.toInt()} LINK",
+                    text = "${"%,d".format(chainlink.value?.supply?.toInt())} LINK",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
@@ -225,7 +225,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "$${chainlink.value?.volumeUsd24Hr?.toInt()}",
+                    text = "$${"%,d".format(chainlink.value?.volumeUsd24Hr?.toInt())}",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
@@ -250,7 +250,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                     modifier = Modifier
                 )
                 Text(
-                    text = "${chainlink.value?.maxSupply?.toInt()} LINK",
+                    text = "${"%,d".format(chainlink.value?.maxSupply?.toInt())} LINK",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.W500,
