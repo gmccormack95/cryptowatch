@@ -84,3 +84,7 @@ fun Modifier.simpleGridVerticalScrollbar(
         }
     }
 }
+
+fun LazyListState.isScrolledToTheEnd() = layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+
+fun LazyStaggeredGridState.isScrolledToTheEnd() = layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
