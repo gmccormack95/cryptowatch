@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    //id("org.web3j")
 }
 
 android {
@@ -42,11 +43,13 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
-    packaging {
+    /*packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+     */
 }
 
 dependencies {
@@ -85,6 +88,8 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose:1.12.0")
     implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
     implementation("com.patrykandpatrick.vico:core:1.12.0")
+
+    implementation("org.web3j:core:4.9.1")
 
     // For the view system.
     implementation("com.patrykandpatrick.vico:views:1.12.0")

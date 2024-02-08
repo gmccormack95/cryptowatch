@@ -26,6 +26,7 @@ import com.link.stinkies.model.ImageDownloadManager
 import com.link.stinkies.model.StartUp
 import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.model.coincap.CoinCapRepo
+import com.link.stinkies.model.web3.Web3Manager
 import com.link.stinkies.ui.theme.StinkiesTheme
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 
@@ -51,6 +52,8 @@ class HomeActivity : ComponentActivity() {
 
         viewModel = ViewModelProvider(this).get(HomeActivityVM::class.java)
         viewModel.init(BizRepo, CoinCapRepo)
+
+        Web3Manager.getStakingRewards()
 
         setContent {
             StinkiesTheme (
