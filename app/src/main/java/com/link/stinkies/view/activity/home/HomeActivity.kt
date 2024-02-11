@@ -65,6 +65,19 @@ class HomeActivity : ComponentActivity() {
                         },
                         onDismiss = {
                             viewModel.bottomsheetVM.showSheet.value = false
+                        },
+                        onShare = { thread, post ->
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "https://boards.4chan.org/biz/thread/${thread?.threadId}#p${post?.id}"
+                                )
+                                type = "text/plain"
+                            }
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+
+                            this.startActivity(shareIntent)
                         }
                     )
                 }

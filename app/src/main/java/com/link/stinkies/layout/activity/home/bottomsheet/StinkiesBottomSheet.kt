@@ -38,14 +38,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.link.stinkies.model.biz.Post
+import com.link.stinkies.model.biz.PostThread
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheet(viewModel: HomeActivityVM, onDownload: (Post?) -> Unit, onDismiss: () -> Unit) {
+fun BottomSheet(viewModel: HomeActivityVM, onDownload: (Post?) -> Unit, onDismiss: () -> Unit,
+                onShare: (PostThread?, Post?) -> Unit) {
     val modalBottomSheetState = rememberModalBottomSheetState()
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
+    val thread = viewModel.bottomsheetVM.thread.observeAsState()
     val post = viewModel.bottomsheetVM.post.observeAsState()
 
     ModalBottomSheet(
@@ -92,11 +95,13 @@ fun BottomSheet(viewModel: HomeActivityVM, onDownload: (Post?) -> Unit, onDismis
                     .padding(16.dp)
                     .clickable {
                         clipboardManager.setText(AnnotatedString(post.value?.comment ?: ""))
-                        Toast.makeText(
-                            context,
-                            "Copied to clipboard",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast
+                            .makeText(
+                                context,
+                                "Copied to clipboard",
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
                         onDismiss()
                     }
             ) {
@@ -121,6 +126,7 @@ fun BottomSheet(viewModel: HomeActivityVM, onDownload: (Post?) -> Unit, onDismis
                     .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
+                        onShare(thread.value, post.value)
                         onDismiss()
                     }
             ) {

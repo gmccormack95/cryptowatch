@@ -124,7 +124,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
                     .padding(end = 16.dp)
             )
             IconButton(
-                onClick = { viewModel.bottomsheetVM.open(post) },
+                onClick = { viewModel.bottomsheetVM.open(viewModel.threadLayoutVM.thread.value, post) },
                 modifier = Modifier
                     .size(20.dp)
             ) {
