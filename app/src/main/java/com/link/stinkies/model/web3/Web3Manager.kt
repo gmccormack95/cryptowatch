@@ -81,4 +81,9 @@ object Web3Manager {
         }
     }
 
+    fun clearWallet() {
+        sharedPreferences?.edit()?.remove(Key.stakingAddress)?.apply()
+        reward.value = null
+    }
+
 }

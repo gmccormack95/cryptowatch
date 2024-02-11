@@ -18,4 +18,8 @@ class StakingLayoutVM : ViewModel() {
 
     var error = mutableStateOf(false)
 
+    fun clearWallet() {
+        Web3Manager.clearWallet()
+    }
+
 }
