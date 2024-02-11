@@ -19,6 +19,7 @@ object BizRepo {
     var catalog: MutableLiveData<Catalog> = MutableLiveData()
     var thread: MutableLiveData<PostThread> = MutableLiveData()
     var volleyManager: VolleyManager? = null
+    var threadPositions: HashMap<Int, Int> = HashMap()
 
     fun init(context: Context) {
         volleyManager = VolleyManager.getInstance(context)

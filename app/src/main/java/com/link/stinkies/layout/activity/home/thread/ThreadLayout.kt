@@ -1,5 +1,5 @@
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalGlideComposeApi::class,
-    ExperimentalMaterialApi::class, ExperimentalMaterialApi::class
+    ExperimentalMaterialApi::class, ExperimentalMaterialApi::class, FlowPreview::class
 )
 
 package com.link.stinkies.layout.activity.home.thread
@@ -27,6 +27,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -34,12 +35,18 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.link.stinkies.layout.activity.home.simpleVerticalScrollbar
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import com.link.stinkies.layout.activity.home.thread.post.Post
+import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.ui.theme.background
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 @Composable
 fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int, drawerState: DrawerState) {
-    val listState = rememberLazyListState()
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = BizRepo.threadPositions[threadId] ?: 0
+    )
     val scope = rememberCoroutineScope()
     val thread = viewModel.threadLayoutVM.thread.observeAsState()
     val isRefreshing = viewModel.threadLayoutVM.loading.observeAsState()
@@ -49,6 +56,16 @@ fun ThreadLayout(viewModel: HomeActivityVM, threadId: Int, drawerState: DrawerSt
             viewModel.refreshThread(threadId)
         }
     )
+
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            listState.firstVisibleItemIndex
+        }
+            .debounce(500L)
+            .collectLatest { index ->
+            BizRepo.threadPositions[threadId] = index
+        }
+    }
 
     BackHandler(
         enabled = drawerState.isOpen,
