@@ -53,7 +53,7 @@ fun Modifier.simpleVerticalScrollbar(
 @Composable
 fun Modifier.simpleGridVerticalScrollbar(
     state: LazyStaggeredGridState,
-    width: Dp = 4.dp
+    width: Dp = 4.dp,
 ): Modifier {
     val targetAlpha = if (state.isScrollInProgress) 1f else 0f
     val duration = if (state.isScrollInProgress) 150 else 500

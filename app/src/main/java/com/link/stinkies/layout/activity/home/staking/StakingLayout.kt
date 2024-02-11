@@ -1,6 +1,6 @@
-@file:OptIn(ExperimentalAnimationGraphicsApi::class)
+@file:OptIn(ExperimentalAnimationGraphicsApi::class, ExperimentalMaterial3Api::class)
 
-package com.link.stinkies.layout.settings
+package com.link.stinkies.layout.activity.home.staking
 
 import android.graphics.Bitmap
 import android.view.ViewGroup
@@ -8,15 +8,33 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,19 +50,47 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.link.stinkies.R
+import com.link.stinkies.ui.theme.financeGreen
+import com.link.stinkies.ui.theme.financeRed
+import com.link.stinkies.ui.theme.linkBlue
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
-import org.web3j.protocol.Web3j
-import org.web3j.protocol.http.HttpService
-import org.web3j.tx.ReadonlyTransactionManager
+import com.link.stinkies.viewmodel.activity.home.staking.StakingLayoutVM
 import java.lang.Math.min
 
 
 @Composable
-fun SettingsLayout(viewModel: HomeActivityVM) {
+fun StakingLayout(viewModel: StakingLayoutVM) {
+    val reward = viewModel.reward.observeAsState()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        if (reward.value == null) {
+            WalletNotLinked(viewModel)
+        } else {
+            StakingReward(viewModel)
+        }
+    }
+}
+
+
+
+
+
+
+
+@Composable
+fun WebviewScreen(){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -82,10 +128,8 @@ fun SettingsLayout(viewModel: HomeActivityVM) {
             )
         }
     }
-}
 
-@Composable
-fun WebviewScreen(){
+
     var backEnable by remember { mutableStateOf(false) }
     var webView : WebView? = null
 

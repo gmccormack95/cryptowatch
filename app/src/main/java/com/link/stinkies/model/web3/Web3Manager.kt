@@ -1,7 +1,15 @@
 package com.link.stinkies.model.web3
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.util.Log.d
-import com.link.stinkies.LinkStaking
+import androidx.lifecycle.MutableLiveData
+import com.link.stinkies.StinkiesApplication
+import com.link.stinkies.model.Key
+import com.link.stinkies.model.StartUp
+import com.link.stinkies.model.coincap.CoinCapRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -9,26 +17,67 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.ReadonlyTransactionManager
 import org.web3j.tx.gas.DefaultGasProvider
-import org.web3j.tx.response.PollingTransactionReceiptProcessor
-import java.math.BigInteger
 import kotlin.math.pow
 
 object Web3Manager {
 
-    fun getStakingRewards() {
+    val reward: MutableLiveData<ChainlinkReward> = MutableLiveData()
+
+    private const val etheriumNode = "https://mainnet.infura.io/v3/724494f87828475988f55f1301dc2dfe"
+    private const val contractAddress = "0x996913c8c08472f584ab8834e925b06D0eb1D813"
+
+    private var sharedPreferences: SharedPreferences? = null
+
+    private const val REFRESH_TIME: Long = 60 * 60 * 1000
+
+    fun init(context: Context) {
+        sharedPreferences = context.getSharedPreferences(StinkiesApplication.APP_NAME, Context.MODE_PRIVATE)
+
+        val mainHandler = Handler(Looper.getMainLooper())
+        mainHandler.post(object : Runnable {
+            override fun run() {
+                getStakingRewards(null, {}, {})
+                mainHandler.postDelayed(this, REFRESH_TIME)
+            }
+        })
+    }
+
+    fun getStakingRewards(address: String?, onComplete: (ChainlinkReward) -> Unit, onError: (Exception) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            val web3j = Web3j.build(HttpService("https://mainnet.infura.io/v3/724494f87828475988f55f1301dc2dfe"))
-            val transactionManager = ReadonlyTransactionManager(web3j, "0x996913c8c08472f584ab8834e925b06D0eb1D813")
+            address?.run {
+                sharedPreferences?.edit()?.putString(Key.stakingAddress, address)?.apply()
+            }
+
+            val walletAddress = address ?: run {
+                sharedPreferences?.getString(Key.stakingAddress, null)
+            } ?: return@launch
+
+            val web3j = Web3j.build(HttpService(etheriumNode))
+            val transactionManager = ReadonlyTransactionManager(web3j, contractAddress)
             val contract: LinkStaking = LinkStaking.load(
-                "0x996913c8c08472f584ab8834e925b06D0eb1D813",
+                contractAddress,
                 web3j,
                 transactionManager,
                 DefaultGasProvider()
             )
 
-            val result = contract.getReward("0x6Fc86cbC3cAe7c3f03Dd279b1D9bB5CF3675bDa0").sendAsync().get()
-            val chainlinkRewards: Float = result.toFloat() * 10.0f.pow(-18)
-            d("Web3Manager", "getReward(): $chainlinkRewards")
+            val chainlinkReward = ChainlinkReward()
+
+            try {
+                val rewardResult = contract.getReward(walletAddress).sendAsync().get()
+                chainlinkReward.claimable = rewardResult.toFloat() * 10.0f.pow(-18)
+                d("Web3Manager", "claimable: ${chainlinkReward.claimable}")
+
+                val lockedRewardResult = contract.calculateLatestStakerReward(walletAddress).sendAsync().get()
+                chainlinkReward.locked = lockedRewardResult.component2().toFloat() * 10.0f.pow(-18)
+                d("Web3Manager", "locked: ${chainlinkReward.locked}")
+            } catch (e: Exception) {
+                d("Web3Manager", "exception: ${e.message}")
+                onError(e)
+            }
+
+            reward.postValue(chainlinkReward)
+            onComplete(chainlinkReward)
         }
     }
 

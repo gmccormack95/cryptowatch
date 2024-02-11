@@ -2,17 +2,13 @@
 
 package com.link.stinkies.layout.activity.home
 
-import android.util.Log.d
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.DrawerValue
@@ -24,13 +20,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -45,12 +36,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.link.stinkies.R
 import com.link.stinkies.layout.activity.home.drawer.RepliesDrawer
+import com.link.stinkies.layout.activity.home.staking.StakingLayout
 import com.link.stinkies.layout.activity.home.thread.ThreadLayout
 import com.link.stinkies.layout.appbar.StinkiesAppBar
 import com.link.stinkies.layout.catalog.CatalogLayout
 import com.link.stinkies.layout.charts.ChartLayout
-import com.link.stinkies.layout.settings.SettingsLayout
-import com.link.stinkies.model.StartUp
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
 import kotlinx.coroutines.launch
 
@@ -95,8 +85,8 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
         ),
         BottomNavigationItem(
             title = "Staking",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
+            selectedIcon = ImageVector.vectorResource(R.drawable.staking_icon_filled),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.staking_icon_unfilled),
             route = Screen.Settings.name
         ),
     )
@@ -168,7 +158,7 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                     CatalogLayout(viewModel, navController, gridState)
                 }
                 composable(route = Screen.Settings.route) {
-                    SettingsLayout(viewModel)
+                    StakingLayout(viewModel.stakingLayoutVM)
                 }
                 composable(
                     route = Screen.Thread.route,

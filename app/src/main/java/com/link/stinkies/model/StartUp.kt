@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.link.stinkies.model.biz.BizRepo
 import com.link.stinkies.model.coincap.CoinCapRepo
+import com.link.stinkies.model.web3.Web3Manager
 
 object StartUp {
 
@@ -19,6 +20,7 @@ object StartUp {
         this.coinCapRepo = coinCapRepo
         BizRepo.init(context)
         CoinCapRepo.init(context)
+        Web3Manager.init(context)
     }
 
     fun checkInitialised() {

@@ -7,6 +7,7 @@ import com.link.stinkies.model.biz.Catalog
 import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
 import com.link.stinkies.viewmodel.activity.home.bottomsheet.BottomSheetVM
+import com.link.stinkies.viewmodel.activity.home.staking.StakingLayoutVM
 import com.link.stinkies.viewmodel.activity.home.thread.ThreadLayoutVM
 
 class HomeActivityVM : ViewModel() {
@@ -14,6 +15,7 @@ class HomeActivityVM : ViewModel() {
     var chartLayoutVM = ChartLayoutVM()
     var threadLayoutVM = ThreadLayoutVM()
     var bottomsheetVM = BottomSheetVM()
+    var stakingLayoutVM = StakingLayoutVM()
 
     var catalog: MutableLiveData<Catalog> = MutableLiveData()
     var catalogLoading: MutableLiveData<Boolean> = MutableLiveData(false)

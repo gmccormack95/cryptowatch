@@ -1,8 +1,7 @@
-package com.link.stinkies;
+package com.link.stinkies.model.web3;
 
 import io.reactivex.Flowable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

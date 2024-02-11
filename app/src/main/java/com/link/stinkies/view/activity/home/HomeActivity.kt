@@ -53,8 +53,6 @@ class HomeActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this).get(HomeActivityVM::class.java)
         viewModel.init(BizRepo, CoinCapRepo)
 
-        Web3Manager.getStakingRewards()
-
         setContent {
             StinkiesTheme (
                 dynamicColor = false
