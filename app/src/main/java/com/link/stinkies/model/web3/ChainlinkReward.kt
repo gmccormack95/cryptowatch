@@ -9,6 +9,4 @@ class ChainlinkReward {
     val total: Float
         get() = (claimable ?: 0f) + (locked ?: 0f)
 
-
-
 }

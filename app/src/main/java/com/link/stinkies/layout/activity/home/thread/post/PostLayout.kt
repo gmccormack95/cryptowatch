@@ -83,7 +83,7 @@ fun Post(viewModel: HomeActivityVM, drawerState: DrawerState, post: Post?, modif
 }
 
 @Composable
-fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
+fun PostHeader(post: Post?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -139,7 +139,7 @@ fun PostHeader(viewModel: HomeActivityVM, post: Post?) {
 }
 
 @Composable
-fun PostBody(viewModel: HomeActivityVM, post: Post?, drawerState: DrawerState, scope: CoroutineScope) {
+fun PostBody(post: Post?, drawerState: DrawerState, scope: CoroutineScope) {
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -176,7 +176,7 @@ fun PostBody(viewModel: HomeActivityVM, post: Post?, drawerState: DrawerState, s
 }
 
 @Composable
-private fun PostFooter(viewModel: HomeActivityVM, post: Post?, drawerState: DrawerState, scope: CoroutineScope) {
+private fun PostFooter(post: Post?, drawerState: DrawerState, scope: CoroutineScope) {
     val threadLayoutVM = viewModel.threadLayoutVM
     val replyCount: Int = (threadLayoutVM.thread.value?.getReplies(post?.id)?.size ?: 0 ) -1
 

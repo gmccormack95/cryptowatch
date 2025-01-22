@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -40,8 +39,10 @@ import com.link.stinkies.layout.activity.home.staking.StakingLayout
 import com.link.stinkies.layout.activity.home.thread.ThreadLayout
 import com.link.stinkies.layout.appbar.StinkiesAppBar
 import com.link.stinkies.layout.catalog.CatalogLayout
-import com.link.stinkies.layout.charts.ChartLayout
+import com.link.stinkies.layout.activity.home.charts.ChartLayout
+import com.link.stinkies.model.coincap.CoinCapRepo
 import com.link.stinkies.viewmodel.activity.HomeActivityVM
+import com.link.stinkies.viewmodel.activity.charts.ChartLayoutVM
 import kotlinx.coroutines.launch
 
 data class BottomNavigationItem(
@@ -112,8 +113,7 @@ fun HomeActivityLayout(viewModel: HomeActivityVM, navController: NavHostControll
                 )
             },
             bottomBar = {
-                NavigationBar (
-                ) {
+                NavigationBar {
                     items.forEach { item ->
                         NavigationBarItem(
                             selected = currentDestination?.hierarchy?.any { it.route == item.route || (it.route == Screen.Thread.route && item.route == Screen.Biz.route)} == true,

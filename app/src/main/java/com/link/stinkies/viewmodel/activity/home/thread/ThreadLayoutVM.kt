@@ -12,7 +12,6 @@ class ThreadLayoutVM : ViewModel() {
 
     var loading: MutableLiveData<Boolean> = MutableLiveData(false)
     var thread: MutableLiveData<PostThread> = MutableLiveData()
-
     var scrollPositions = hashMapOf<Int, Int>()
 
     private var bizRepo: BizRepo? = null

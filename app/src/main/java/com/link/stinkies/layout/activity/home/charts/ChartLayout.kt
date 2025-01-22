@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.link.stinkies.layout.charts
+package com.link.stinkies.layout.activity.home.charts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -259,8 +259,7 @@ private fun LinkStats(viewModel: ChartLayoutVM) {
                 )
             }
         }
-        Column(
-        ){
+        Column {
             Text(
                 text = "Volume/Market cap (24h)",
                 color = Color.White.copy(alpha = .4f),
